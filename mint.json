@@ -10,7 +10,7 @@
     "light": "#07C983",
     "dark": "#000000",
     "background": {
-      "dark": "#0F172A"
+      "dark": "#000000"
     },
     "anchors": {
       "from": "#07C983",
@@ -27,13 +27,6 @@
     {
       "name": "Documentation",
       "url": "overview"
-    }
-  ],
-  "anchors": [
-    {
-      "name": "GitHub",
-      "icon": "github",
-      "url": "https://github.com/dria-network"
     }
   ],
   "navigation": [
@@ -53,22 +46,10 @@
       "pages": [
         "docs/appendix-toploc"
       ]
-    },
-    {
-      "group": "Guides",
-      "pages": [
-        {
-          "group": "Getting Started",
-          "pages": [
-            "docs/guides/getting-started/installation"
-          ]
-        }
-      ]
     }
   ],
   "footerSocials": {
-    "twitter": "https://twitter.com/drianetwork",
-    "github": "https://github.com/dria-network"
+    "twitter": "https://twitter.com/driaforall"
   },
   "analytics": {
     "ga4": {
