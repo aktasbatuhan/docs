@@ -1,0 +1,60 @@
+---
+title: Node Incentives & Staking
+description: Details on how node runners are rewarded through compute tasks and staking, including staking parameters and examples.
+---
+
+## Node Runner Incentives & Staking
+
+This page outlines how Dria incentivizes node runners through compute-based rewards and staking yields, crucial for maintaining a robust and reliable decentralized AI compute network.
+
+### **A. Compute-Based Rewards**
+- Node runners supply compute (FLOPS) to the network.
+- The protocol pays rewards proportional to verified compute, from the emissions schedule.
+- **For verifiable inference tasks:** The protocol only rewards nodes whose computations pass verification.
+- Formula: `Reward = FLOPS_delivered * Reward_Rate` (The `Reward_Rate` varies based on network demand and the disinflationary schedule, targeting approximately [X-Y] `$DRIA` per million FLOPS).
+
+### **B. Staking Yield**
+- Node runners must stake `$DRIA` tokens to participate.
+- Active nodes (meeting uptime targets) earn additional yield on their staked tokens.
+- Formula: `Yield = Tokens_staked * Yield_Rate * Active_Hours` (targeting annual yields of [10-90%] based on network conditions and node reliability).
+- Total earnings = Compute rewards + Staking yield.
+
+### **C. Staking Parameters (Placeholders)**
+- **Minimum Stake:** To participate, node runners must stake a minimum of [e.g., 100] `$DRIA` per active node. This baseline stake signifies commitment to the network.
+- **Device Eligibility:** Any device capable of contributing verifiable FLOPS and meeting the network's operational standards is eligible to be staked by its operator.
+- **Unstaking Period:** To maintain network stability, the protocol enforces a [e.g., 7-day] cooldown period when unstaking `$DRIA` tokens. During this cooldown, tokens earn no yield and remain untransferable. After cooldown, tokens become fully liquid.
+- **Collateral Custody (Program-Controlled Escrow):** The protocol holds all staked `$DRIA` tokens in a program-controlled escrow smart contract on Solana. This means neither Dria nor any third party can access or move your collateral—only the contract's logic (e.g., for slashing, reward distribution, or unstaking) can release funds. This ensures maximum security, transparency, and trust for all network participants.
+
+**Slashing:**
+The protocol slashes staked `$DRIA` to disincentivize malicious behavior, prolonged downtime, or service failures. For verifiable inference tasks, the protocol slashes nodes that fail verification by approximately [5-20%] of their stake. This mechanism ensures the integrity of the network. Specific slashing triggers and percentages appear in operational guidelines.
+
+#### Example: Node Runner Reward Calculation
+
+Suppose:
+- Node delivers **10,000,000 FLOPS** for a task
+- **Reward Rate** = 0.0001 `$DRIA` per FLOP
+- **Staked Amount** = 1,000 `$DRIA`
+- **Yield Rate** = 0.01% per hour
+- **Active Hours** = 100 hours
+
+**Compute Reward:**
+
+    10,000,000 FLOPS * 0.0001 `$DRIA`/FLOP = 1,000 `$DRIA`
+
+**Staking Yield:**
+
+    1,000 `$DRIA` * 0.0001 * 100 = 10 `$DRIA`
+
+**Total Earnings:**
+
+    1,000 `$DRIA` (compute) + 10 `$DRIA` (yield) = 1,010 `$DRIA`
+
+#### Concrete Example: Staking APR Calculation
+
+Suppose you stake 1,000 `$DRIA` for one year. If the staking yield rate is 0.01% per hour and your node is active 100% of the time (8,760 hours/year):
+
+    Annual Staking Yield = 1,000 `$DRIA` * 0.0001 * 8,760 = 876 `$DRIA`
+
+    Staking APR = (876 / 1,000) * 100% = 87.6%
+
+If your node is only active 50% of the time, your APR would be half that (43.8%). This allows you to sanity-check the impact of uptime and rate on your staking returns. 

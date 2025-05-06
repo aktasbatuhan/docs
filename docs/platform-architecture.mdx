@@ -1,0 +1,45 @@
+---
+title: Platform Architecture & Usage
+description: Overview of how Dria leverages Solana, its various usage modes, and a summary of key token flows.
+---
+
+## Platform Architecture & Usage Modes
+
+This document covers the foundational elements of Dria's platform, including its reliance on the Solana blockchain for efficient operations and the different ways users can interact with the network.
+
+## Solana: The On-Chain Settlement Layer
+
+Dria leverages Solana for:
+- **High-throughput settlement** – The protocol processes all payments, assignments, and rewards at sub-second speeds with predictable low fees (~$0.0005 per transaction).
+- **On-chain scheduling** – Smart contracts match jobs to nodes, escrow payments, and issue work vouchers within the same block (400ms).
+- **Verifiable inference** – The protocol validates all compute through on-chain commitments, with TOPLOC proofs enabling efficient verification without costly zero-knowledge overhead.
+- **Composability** – All token flows operate in a single, programmable environment, allowing seamless interaction with the broader Solana ecosystem.
+
+---
+
+## Usage Modes
+
+### **A. Network Usage**
+- Users consume credits for compute on the Dria network.
+- All requests are paid from prepaid credits.
+
+### **B. On-Prem Usage**
+- Enterprises can run Dria's compiler on their own infrastructure.
+- They prepay for credits in USD, which are converted to `$DRIA` and locked.
+- Idle compute contributed to the network earns `$DRIA`, which can be burned for credits (deflationary).
+
+### **C. Oracle Node Usage**
+- Lightweight SDK allows direct `$DRIA` payments for Oracle Node services.
+- Each request consumes credits; tokens are burned, supporting deflation.
+
+---
+
+## Summary Table: Key Flows & Mechanisms
+
+| Flow                | Payment Type | Conversion | Credit Lock | Burn | Mint | Node Reward | Staking Yield | Deflation |
+|---------------------|-------------|------------|-------------|------|------|-------------|---------------|-----------|
+| Network (USD)       | USD/Fiat    | Yes        | Yes         | No   | No   | Yes         | Yes           | No        |
+| Network (`$DRIA`)     | `$DRIA`       | No         | Yes         | No   | No   | Yes         | Yes           | No        |
+| On-Prem             | USD         | Yes        | Yes         | Yes  | No   | Yes         | Yes           | Yes       |
+| Oracle Node         | `$DRIA`       | No         | Yes         | Yes  | No   | Yes         | Yes           | Yes       |
+| Node Rewards        | -           | -          | -           | No   | Yes  | Yes         | Yes           | No        | 

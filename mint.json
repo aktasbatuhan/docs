@@ -1,0 +1,78 @@
+{
+  "name": "Dria Network",
+  "logo": {
+    "light": "/terminal kare.png",
+    "dark": "/terminal kare.png"
+  },
+  "favicon": "/favicon.png",
+  "colors": {
+    "primary": "#0D9373",
+    "light": "#07C983",
+    "dark": "#000000",
+    "background": {
+      "dark": "#0F172A"
+    },
+    "anchors": {
+      "from": "#07C983",
+      "to": "#00695C"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Website",
+      "url": "https://dria.co"
+    }
+  ],
+  "tabs": [
+    {
+      "name": "Documentation",
+      "url": "overview"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "url": "https://github.com/dria-network"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Tokenomics",
+      "pages": [
+        "docs/overview",
+        "docs/token-supply-distribution",
+        "docs/payment-flows",
+        "docs/core-economic-engine",
+        "docs/node-incentives-staking",
+        "docs/platform-architecture"
+      ]
+    },
+    {
+      "group": "Technical Deep Dives",
+      "pages": [
+        "docs/appendix-toploc"
+      ]
+    },
+    {
+      "group": "Guides",
+      "pages": [
+        {
+          "group": "Getting Started",
+          "pages": [
+            "docs/guides/getting-started/installation"
+          ]
+        }
+      ]
+    }
+  ],
+  "footerSocials": {
+    "twitter": "https://twitter.com/drianetwork",
+    "github": "https://github.com/dria-network"
+  },
+  "analytics": {
+    "ga4": {
+      "measurementId": "G-XXXXXXXXXX"
+    }
+  }
+} 

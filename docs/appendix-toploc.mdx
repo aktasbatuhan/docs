@@ -1,0 +1,8 @@
+---
+title: Appendix - TOPLOC Technical Details
+description: Technical explanation of the TOPLOC protocol for verifiable inference used in Dria.
+---
+
+## Appendix: How TOPLOC Works (Technical Details)
+
+Dria's verifiable inference leverages the TOPLOC protocol (see https://arxiv.org/abs/2501.16007). When enabled, the compiler instruments the model to commit to the top-k values of internal hidden states using an injective modulus and polynomial interpolation. The proof consists of the polynomial coefficients, modulus, and k. The verifier uses "prefill" data to efficiently reconstruct the hidden states and compare the computed polynomial with the one provided by the prover. This approach is far more efficient than zkML, with proof size and verification time scaling linearly in k. 
