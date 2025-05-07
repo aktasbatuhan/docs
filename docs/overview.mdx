@@ -24,20 +24,11 @@ Our design goals are **transparency, long‑run sustainability, and perfectly al
 
 ---
 
-### TOPLOC in Practice
-
-When a user toggles **Verifiable Inference**, the Dria compiler instruments each shard to output a tiny polynomial commitment of its top‑k activations (see TOPLOC).
-Nodes return the result **plus** the proof; Solana smart‑contracts verify in less than 1 second.
-*Proof passes → reward unlocked.  Proof fails or times‑out → stake slashed and job re‑queued.*
-Users gain cryptographic trust without zk‑ML overhead.
-
----
-
 ## Token Flow
 
 ```mermaid
 graph TD
-    A[USD / USDC] -- swap & fee --> B[Locked Credits]
+    A[USD / USDC] -- swap & fee --> B[Locked Credits]
     C[$DRIA] --> B
     B -- inference spend --> D[Credit Burn / Reward Allocation]
     D -- deflation --> E[Supply ↓]
@@ -84,6 +75,8 @@ Dria's tokenomics convert **electricity + spare silicon** into a globally audita
 * **Aligned**: Enterprises, developers, and hardware owners all win when the network is busy.
 * **Trustless** : Every model run can be cryptographically proven.
 * **Composable** : Built natively on Solana, ready to plug into any DePIN or AI stack.
+
+To see Dria's tokenomics in action from an end-user perspective, check out our [User Experience](/docs/user-experience) walkthrough. It explains what it feels like to run AI on the Dria Network or inside your own data-center.
 
 Dive deeper in the linked sections or spin up your first job and watch the credits flow.
 

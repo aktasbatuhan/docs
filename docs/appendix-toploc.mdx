@@ -3,6 +3,23 @@ title: Appendix - TOPLOC Technical Details
 description: Technical explanation of the TOPLOC protocol for verifiable inference used in Dria.
 ---
 
-## Appendix: How TOPLOC Works (Technical Details)
+## TOPLOC: Verifiable Inference Mechanism
 
-Dria's verifiable inference leverages the TOPLOC protocol (see https://arxiv.org/abs/2501.16007). When enabled, the compiler instruments the model to commit to the top-k values of internal hidden states using an injective modulus and polynomial interpolation. The proof consists of the polynomial coefficients, modulus, and k. The verifier uses "prefill" data to efficiently reconstruct the hidden states and compare the computed polynomial with the one provided by the prover. This approach is far more efficient than zkML, with proof size and verification time scaling linearly in k. 
+Dria employs the TOPLOC protocol (see [arXiv:2501.16007](https://arxiv.org/abs/2501.16007)) for its verifiable inference capabilities, offering users cryptographic trust without the substantial overhead typically associated with zk-ML techniques.
+
+**How it Works:**
+
+1.  **Activation & Instrumentation:** When a user toggles the **Verifiable Inference** option, the Dria compiler instruments each model shard. This process prepares the model to generate proofs about its internal computations.
+
+2.  **Commitment to Top-k Activations:** The instrumented model commits to the top-k values of its internal hidden states. This commitment is achieved using an injective modulus and polynomial interpolation, which are core components of the TOPLOC methodology.
+
+3.  **Proof Generation & Submission:** After processing, nodes return the computational result along with a compact proof. This proof comprises the polynomial coefficients derived during the commitment phase, the modulus used, and the value of 'k'.
+
+4.  **Verification on Solana:** The submitted proof is then verified by Solana smart contracts. The verifier utilizes "prefill" data to efficiently reconstruct the relevant hidden states of the model. It then compares a locally computed polynomial (based on the reconstructed states) with the polynomial submitted by the prover node.
+
+5.  **Rapid Verification & Consequences:** This verification process is highly efficient, typically completing in less than 1 second.
+    *   **Proof Passes:** If the verification is successful, the node's reward for the computation is unlocked.
+    *   **Proof Fails or Times Out:** If the proof is invalid or not submitted in time, the node's staked `$DRIA` is slashed, and the inference job is re-queued to be processed by another node.
+
+**Efficiency:**
+The TOPLOC approach is significantly more efficient than traditional zkML methods. Both the size of the proof and the time required for verification scale linearly with 'k' (the number of top activations considered), making it a practical solution for verifiable AI. 

@@ -35,6 +35,7 @@
       "pages": [
         "docs/overview",
         "docs/token-supply-distribution",
+        "docs/user-experience",
         "docs/payment-flows",
         "docs/core-economic-engine",
         "docs/node-incentives-staking",

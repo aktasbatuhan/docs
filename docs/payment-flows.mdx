@@ -23,4 +23,21 @@ Dria supports two primary payment flows for enterprise and developer users:
     3. Credits become immediately available for network usage.
 
 **Unified Credit System:**
-All payments (fiat or crypto) become locked credits that users can only spend on network services, ensuring revenue retention within the ecosystem. 
+All payments (fiat or crypto) become locked credits that users can only spend on network services, ensuring revenue retention within the ecosystem.
+
+### **C. Oracle Node Service Payments**
+Users accessing Dria's Oracle Node services follow a specific payment flow:
+
+1.  **Direct `$DRIA` Payment for Services:**
+    *   Payment for Oracle Node services is made directly using `$DRIA` tokens (denoted as TokensoracleTokensoracleTokens_{oracle}).
+2.  **Immediate Conversion to Prepaid Credits:**
+    *   These `$DRIA` tokens are instantly converted into prepaid `$DRIA` credits within the user's account.
+    *   Each request made to an Oracle Node then consumes a predetermined amount of these credits (CoracleCoracleC_{oracle}).
+3.  **SDK-Based Service Access:**
+    *   Interaction with Oracle Nodes is facilitated through a lightweight SDK, which sends requests directly to the nodes. This provides a direct interface without a full-featured UI or advanced analytics.
+4.  **Ecosystem Token Recirculation:**
+    *   Similar to other payment flows, the `$DRIA` tokens collected from Oracle Node service usage are channeled into the ecosystem's treasury. These funds contribute to supporting node runner rewards and overall network health. 
+
+---
+
+**For a detailed walkthrough of these payment flows from a user's perspective, including step-by-step explanations of credits purchasing, network usage, and on-prem deployments, see the [User Experience](/docs/user-experience) page.** 
