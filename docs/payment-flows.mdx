@@ -8,19 +8,17 @@ description: Explanation of Dria's dual on-ramps for payments (USD/Fiat and Dire
 Dria supports two primary payment flows for enterprise and developer users:
 
 ### **A. USD / Fiat / Stablecoin Payments**
-- **Process:**
-    1. Users pay in USD (or stablecoins like USDC).
-    2. Dria manages a dedicated wallet for each customer.
-    3. The system deducts a small conversion fee (~1-2%).
-    4. At regular intervals (daily/weekly), the protocol converts the net USD to `$DRIA` tokens at the current market rate.
-    5. These convert to **locked credits** in the user's account (non-withdrawable).
-    6. All network activity consumes these locked credits.
+1. Users pay in USD (or stablecoins like USDC).
+2. Dria manages a dedicated wallet for each customer.
+3. The system deducts a small conversion fee (~1-2%).
+4. At regular intervals (daily/weekly), the protocol converts the net USD to `$DRIA` tokens at the current market rate.
+5. These convert to **locked credits** in the user's account (non-withdrawable).
+6. All network activity consumes these locked credits.
 
 ### **B. Direct `$DRIA` Token Payments**
-- **Process:**
-    1. Users pay directly with `$DRIA` tokens from their wallets.
-    2. The protocol converts 100% of these tokens to locked credits with no fee.
-    3. Credits become immediately available for network usage.
+1. Users pay directly with `$DRIA` tokens from their wallets.
+2. The protocol converts 100% of these tokens to locked credits with no fee.
+3. Credits become immediately available for network usage.
 
 **Unified Credit System:**
 All payments (fiat or crypto) become locked credits that users can only spend on network services, ensuring revenue retention within the ecosystem.
