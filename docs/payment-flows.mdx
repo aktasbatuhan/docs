@@ -1,6 +1,6 @@
 ---
 title: Payment Flows
-description: Explanation of Dria's dual on-ramps for payments (USD/Fiat and Direct $DRIA) and the Unified Credit System.
+description: Explanation of Dria's dual on-ramps for payments (USD/Fiat and Direct `$DRIA`) and the Unified Credit System.
 ---
 
 ## Payment Flows: Dual On-Ramps
@@ -8,12 +8,13 @@ description: Explanation of Dria's dual on-ramps for payments (USD/Fiat and Dire
 Dria supports two primary payment flows for enterprise and developer users:
 
 ### **A. USD / Fiat / Stablecoin Payments**
-1. Users pay in USD (or stablecoins like USDC).
-2. Dria manages a dedicated wallet for each customer.
-3. The system deducts a small conversion fee (~1-2%).
-4. At regular intervals (daily/weekly), the protocol converts the net USD to `$DRIA` tokens at the current market rate.
-5. These convert to **locked credits** in the user's account (non-withdrawable).
-6. All network activity consumes these locked credits.
+- **Process:**
+    1. Users pay in USD (or stablecoins like USDC).
+    2. Dria manages a dedicated wallet for each customer.
+    3. After deducting a small processing fee (~1-2%), Dria uses the net USD amount to purchase `$DRIA` tokens from the open market at the prevailing rate (e.g., daily TWAP).
+    4. **These purchased `$DRIA` tokens are immediately burned**, permanently reducing the total circulating supply.
+    5. An equivalent value in **locked credits** (non-withdrawable) is allocated to the user's account.
+    6. All Dria network activity and service consumption by the user then draws from these locked credits.
 
 ### **B. Direct `$DRIA` Token Payments**
 1. Users pay directly with `$DRIA` tokens from their wallets.

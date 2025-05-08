@@ -10,12 +10,12 @@ Whether you burst to thousands of peer‑to‑peer nodes or keep everything on�
 
 ### 1. Buying Credits
 
-| Option                   | How It Works                                                                         | Result                                                                 |
-|--------------------------|--------------------------------------------------------------------------------------|------------------------------------------------------------------------|
-| USD / Stable‑coin (USDC) | Pay invoice or swipe card → Dria auto‑converts at the daily TWAP, minus ~1–2% FX fee | $DRIA credits appear in your dashboard, locked for compute spend       |
-| Direct $DRIA             | Send tokens straight to your project wallet; no fee                                  | Credits top‑up instantly, 1:1                                          |
+| Option                   | How It Works                                                                                                                               | Result                                                                 |
+|--------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------|
+| USD / Stable‑coin (USDC) | Pay invoice or swipe card → Dria uses the USD to buy `$DRIA` from the market at the daily TWAP (minus ~1–2% FX fee), then burns these `$DRIA`. | `$DRIA`-equivalent credits appear in your dashboard, locked for compute spend. The burn reduces `$DRIA` supply. |
+| Direct `$DRIA`             | Send tokens straight to your project wallet; no fee.                                                                                       | Credits top‑up instantly, 1:1.                                         |
 
-**Credits never leave the system:** they can only be burnt for FLOPS.
+**Credits represent value for compute:** USD payments result in a `$DRIA` burn, while direct `$DRIA` payments lock up existing tokens. All credits can only be spent on FLOPS.
 
 
 ### 2. Running on the Dria Network
@@ -23,19 +23,19 @@ Whether you burst to thousands of peer‑to‑peer nodes or keep everything on�
 ```mermaid
 sequenceDiagram
     participant User
-    participant API as Dria /batch
+    participant API as Dria /inference
     participant Scheduler
     participant Workers as GPU • NPU • CPU Swarm
     participant Solana
     
-    User->>API: POST /batch (model, data, QoS)
+    User->>API: POST /inference (model, data, QoS)
     API-->>Solana: Pay with locked credits
     Solana-->>Scheduler: voucher + budget
     Scheduler-->>Workers: Shard graph → send work
     Workers-->>Solana: TOPLOC proof + result hash
     Solana-->>Scheduler: verified / penalise
     Scheduler-->>API: signed result
-    API-->>User: JSON (output, cost, proof_link)
+    API-->>User: Response (output, cost, proof_link)
 ```
 
 1. **Submit** – Curl, SDK, or REST; specify model name, max latency, budget ceiling.
@@ -54,18 +54,18 @@ Same compiler, same APIs only the target cluster changes.
 1. **Install** – `pip install dnet && dnet init` on your cluster.
 2. **License Activation** – Point the CLI to your project wallet; credits are already there.
 3. **Compile Once** – Dria's topology‑aware compiler inspects your racks (H100s next to EPYC CPUs, maybe a few NPUs), auto‑shards the model, and stores a binary plan.
-4. **Serve /train /batch** – Hit the same REST endpoints your devs use against the public network.
-5. **Idle Compute Back‑haul (opt‑in)** – Flag `--export-idle`; when utilisation < X% the cluster back‑fills network jobs, earning $DRIA that are instantly burnt into fresh credits slashing your effective TCO.
+4. **Serve /train /inference** – Hit the same REST endpoints your devs use against the public network.
+5. **Idle Compute Back‑haul (opt‑in)** – Flag `--export-idle`; when utilisation < X% the cluster back‑fills network jobs, earning `$DRIA` that are instantly burnt into fresh credits slashing your effective TCO.
 
 **Accounting looks like this:**
 
 | Flow | Credits | Token Effect |
 |------|---------|--------------|
-| You buy $10k USD → credits | +10k | none |
-| You run jobs on‑prem | −8k | none |
-| You export 200 GPU‑hr idle | +2k (burn) | −2k supply |
+| You buy $10k USD → credits | +10k    | -10k worth of `$DRIA` bought & burned from supply |
+| You run jobs on‑prem | −8k     | none (credits consumed) |
+| You export 200 GPU‑hr idle | +2k (credits earned via `$DRIA`) | `$DRIA` earned by your compute is then converted to credits (typically involving a burn of those earned `$DRIA`, further reducing supply) |
 
-Result: zero net spend, deflationary pressure on the token, and 100% utilisation of your silicon.
+Result: significantly reduced net spend due to on-prem contributions, strong deflationary pressure on the `$DRIA` token from both initial USD purchases and on-prem idle compute conversion, and 100% utilisation of your silicon.
 
 ### 4. Why Sharding & Scheduling Matter to You
 * **No single device limit** – 70B Llama on an RTX‑4090? The compiler streams KV‑cache across three consumer cards + one CPU.
@@ -77,8 +77,8 @@ Result: zero net spend, deflationary pressure on the token, and 100% utilisation
 ```bash
 # 3‑line quick‑start (network)
 export DRIA_KEY=<your wallet>
-curl -X POST https://api.dria.ai/batch \
-     -H "Authorization: Bearer $DRIA_KEY" \
+curl -X POST https://api.dria.co/inference \
+     -H "Authorization: Bearer `$DRIA`_KEY" \
      -d '{"model":"gemma-7b","inputs":[...]}'
 
 # same code, private cluster

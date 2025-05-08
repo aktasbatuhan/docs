@@ -3,9 +3,6 @@ title: Platform Architecture & Usage
 description: Overview of how Dria leverages Solana, its various usage modes, and a summary of key token flows.
 ---
 
-## Platform Architecture & Usage Modes
-
-This document covers the foundational elements of Dria's platform, including its reliance on the Solana blockchain for efficient operations and the different ways users can interact with the network.
 
 ## Solana: The onchain Settlement Layer
 
@@ -21,25 +18,28 @@ Dria leverages Solana for:
 
 ### **A. Network Usage**
 - Users consume credits for compute on the Dria network.
-- All requests are paid from prepaid credits.
+- If paying with USD/Fiat: Dria uses the fiat to buy `$DRIA` from the market, burns these tokens, and issues equivalent credits to the user. This is a deflationary event.
+- If paying with `$DRIA`: Tokens are directly converted to locked credits.
+- All requests are paid from these prepaid credits.
 
 ### **B. On-Prem Usage**
 - Enterprises can run Dria's compiler on their own infrastructure.
-- They prepay for credits in USD, which are converted to `$DRIA` and locked.
-- Idle compute contributed to the network earns `$DRIA`, which can be burned for credits (deflationary).
+- They typically prepay for credits in USD. This transaction follows the same buy-and-burn mechanism: Dria uses the USD to purchase `$DRIA` from the market, these tokens are burned, and the enterprise receives an equivalent value in locked credits.
+- Idle compute contributed back to the Dria network earns `$DRIA`. These earned tokens can then be converted back into platform credits (which may also involve a burn of the earned tokens), further reducing operational costs and contributing to deflation.
 
 ### **C. Oracle Node Usage**
 - Lightweight SDK allows direct `$DRIA` payments for Oracle Node services.
-- Each request consumes credits; tokens are burned, supporting deflation.
+- These `$DRIA` tokens are converted to credits. Each request consumes credits, and a portion of the underlying `$DRIA` is burned, supporting deflation.
 
 ---
 
 ## Summary Table: Key Flows & Mechanisms
 
-| Flow                | Payment Type | Conversion | Credit Lock | Burn | Mint | Node Reward | Staking Yield | Deflation |
-|---------------------|-------------|------------|-------------|------|------|-------------|---------------|-----------|
-| Network (USD)       | USD/Fiat    | Yes        | Yes         | No   | No   | Yes         | Yes           | No        |
-| Network (`$DRIA`)     | `$DRIA`       | No         | Yes         | No   | No   | Yes         | Yes           | No        |
-| On-Prem             | USD         | Yes        | Yes         | Yes  | No   | Yes         | Yes           | Yes       |
-| Oracle Node         | `$DRIA`       | No         | Yes         | Yes  | No   | Yes         | Yes           | Yes       |
-| Node Rewards        | -           | -          | -           | No   | Yes  | Yes         | Yes           | No        | 
+| Flow                | Payment Type | Conversion / Token Action                                  | Credit Lock | Burn | Mint | Node Reward | Staking Yield | Deflation |
+|---------------------|-------------|------------------------------------------------------------|-------------|------|------|-------------|---------------|-----------|
+| Network (USD)       | USD/Fiat    | Fiat used to buy `$DRIA` from market, then `$DRIA` is burned | Yes         | Yes  | No   | Yes         | Yes           | Yes       |
+| Network (`$DRIA`)     | `$DRIA`       | Direct `$DRIA` to credits                                    | Yes         | No   | No   | Yes         | Yes           | No        |
+| On-Prem (Initial USD)| USD         | Fiat used to buy `$DRIA` from market, then `$DRIA` is burned | Yes         | Yes  | No   | (Earned)    | (Earned)      | Yes       |
+| On-Prem (Earned `$DRIA` conversion to credits) | `$DRIA` (Earned) | Earned `$DRIA` to credits                                  | Yes         | Yes  | No   | Yes         | Yes           | Yes       |
+| Oracle Node         | `$DRIA`       | Direct `$DRIA` to credits, portion burned on use             | Yes         | Yes  | No   | Yes         | Yes           | Yes       |
+| Node Rewards        | -           | -                                                          | -           | No   | Yes  | Yes         | Yes           | No        | 
