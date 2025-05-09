@@ -1,6 +1,6 @@
 ---
 title: User Experience
-description: A step‑by‑step walk‑through of what it feels like to run AI on the Dria Network or inside your own data‑center with the same license, the same compiler, and the same credit balance.
+description: A step‑by‑step walkthrough of what it feels like to run AI on the Dria Network or inside your own data‑center with the same license, the same compiler, and the same credit balance.
 ---
 
 ## End‑User Experience
@@ -30,11 +30,11 @@ sequenceDiagram
     
     User->>API: POST /inference (model, data, QoS)
     API-->>Solana: Pay with locked credits
-    Solana-->>Scheduler: voucher + budget
-    Scheduler-->>Workers: Shard graph → send work
+    Solana-->>Scheduler: Voucher + Budget
+    Scheduler-->>Workers: Shard graph → Send work
     Workers-->>Solana: TOPLOC proof + result hash
-    Solana-->>Scheduler: verified / penalise
-    Scheduler-->>API: signed result
+    Solana-->>Scheduler: Verified / Penalise
+    Scheduler-->>API: Signed result
     API-->>User: Response (output, cost, proof_link)
 ```
 
@@ -47,7 +47,7 @@ sequenceDiagram
 4. **Proof & Payout** – Nodes post TOPLOC proofs; good shards auto‑claim rewards, bad shards are re‑queued and slashed.
 5. **Retrieve** – You receive the stitched result, cost breakdown, and a link to the on‑chain proof tx.
 
-### 3. Running On‑Prem with Dria License
+### 3. Running On‑Prem with Dria the License
 
 Same compiler, same APIs only the target cluster changes.
 
@@ -65,7 +65,7 @@ Same compiler, same APIs only the target cluster changes.
 | You run jobs on‑prem | −8k     | none (credits consumed) |
 | You export 200 GPU‑hr idle | +2k (credits earned via `$DRIA`) | `$DRIA` earned by your compute is then converted to credits (typically involving a burn of those earned `$DRIA`, further reducing supply) |
 
-Result: significantly reduced net spend due to on-prem contributions, strong deflationary pressure on the `$DRIA` token from both initial USD purchases and on-prem idle compute conversion, and 100% utilisation of your silicon.
+Result: Significantly reduced net spend due to on-prem contributions, strong deflationary pressure on the `$DRIA` token from both initial USD purchases and on-prem idle compute conversion, and 100% utilisation of your silicon.
 
 ### 4. Why Sharding & Scheduling Matter to You
 * **No single device limit** – 70B Llama on an RTX‑4090? The compiler streams KV‑cache across three consumer cards + one CPU.

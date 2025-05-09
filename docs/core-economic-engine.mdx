@@ -7,34 +7,100 @@ description: Understanding Dria's mechanisms for value retention, inflation cont
 
 This section explains the fundamental economic drivers of the Dria network, focusing on how value is retained, how token supply is managed through inflation, and how deflationary pressures are introduced.
 
-### **Retention** – *value stays in the ecosystem*
+### **Retention**
+***Value stays in the ecosystem.***
+
 The protocol locks all payments as non-withdrawable credits, which users can only spend on network services. This creates continuous demand and value retention.
 
-### **Inflation** – *supply grows only after compute delivered*
+### **Emission & Inflation**
+***Supply grows only after compute delivered.***
 - The protocol mints new `$DRIA` tokens only as rewards for node runners from the "Node Runner Rewards Pool" allocation, after verifying their compute delivery (measured in FLOPS).
-- **Emission Period:** Rewards distribute over [e.g., 10 years], ensuring sustainable network growth.
-- **Disinflationary Model:** Annual emissions decrease from [~8-10%] in early years to [~1-2%] in later years. This controlled approach manages inflation while consistently rewarding node participation.
+- **Emission Period:** Rewards distribute over 10 years, ensuring sustainable network growth with the potential for extending beyond the initial period based on network needs.
+- **Compute-Linked Issuance:** Unlike time-based emissions, new tokens are created only when real computational work is delivered and cryptographically verified, ensuring that supply growth directly correlates with network utility.
+- **Disinflationary Model:** Annual emissions follow a strategic curve, starting higher (14% in year 1) to bootstrap the network, then gradually decreasing to 2% by year 10.
 
-#### Example: Emission Schedule Table (Placeholders)
+#### Token Supply Allocation
 
-| Year | Annual Emission (%) | Tokens Emitted (Example) | Cumulative Emitted |
-|------|---------------------|--------------------------|--------------------|
-| 1    | 10%                 | 35,000,000               | 35,000,000         |
-| 2    | 8%                  | 28,000,000               | 63,000,000         |
-| 3    | 6%                  | 21,000,000               | 84,000,000         |
-| 4    | 4%                  | 14,000,000               | 98,000,000         |
-| 5-10 | 2%/yr               | 7,000,000/yr             | 140,000,000        |
+| Allocation Category | Percentage | Token Amount | Distribution Details |
+|---------------------|------------|--------------|----------------------|
+| Node Runner Rewards Pool | 35% | 350,000,000 | Emitted over 10 years based on verified compute delivery |
+| Ecosystem Fund & Community | 30% | 300,000,000 | Strategic releases for ecosystem development and community initiatives |
+| Private Round Investors | 16% | 160,000,000 | Completed private funding rounds |
+| Current Investment Round | 5% | 50,000,000 | Ongoing at $240M valuation |
+| Team | 9% | 90,000,000 | 12-month cliff, then 36-month linear monthly vesting |
+| Advisors | 5% | 50,000,000 | 12-month cliff, then 24-month linear monthly vesting |
+| **Total** | **100%** | **1,000,000,000** | **Fixed supply cap** |
 
-*This table is for illustration. Actual schedule will be finalized before TGE.*
+#### Detailed Emission Schedule
 
-**Example Scenario: Inflation Schedule**
+| Year | Annual Emission (%) | Tokens Emitted | Cumulative Emitted | % of Total Supply |
+|------|---------------------|----------------|--------------------|--------------------|
+| 1    | 14%                 | 49,000,000     | 49,000,000         | 4.9%               |
+| 2    | 12%                 | 42,000,000     | 91,000,000         | 9.1%               |
+| 3    | 10%                 | 35,000,000     | 126,000,000        | 12.6%              |
+| 4    | 8%                  | 28,000,000     | 154,000,000        | 15.4%              |
+| 5    | 7%                  | 24,500,000     | 178,500,000        | 17.9%              |
+| 6    | 6%                  | 21,000,000     | 199,500,000        | 20.0%              |
+| 7    | 5%                  | 17,500,000     | 217,000,000        | 21.7%              |
+| 8    | 4%                  | 14,000,000     | 231,000,000        | 23.1%              |
+| 9    | 3%                  | 10,500,000     | 241,500,000        | 24.2%              |
+| 10   | 2%                  | 7,000,000      | 248,500,000        | 24.9%              |
+| Remaining | -              | 101,500,000    | 350,000,000        | 35.0%              |
 
-Suppose the Node Runner Rewards Pool starts with 35% of a 1,000,000,000 `$DRIA` supply (i.e., 350,000,000 `$DRIA`). In Year 1, the protocol emits 10% of this pool (35,000,000 `$DRIA`) as rewards. In Year 2, it emits 8% (28,000,000 `$DRIA`), and so on, following the table above. This means the emission rate slows over time, making `$DRIA` scarcer as the network matures.
+*Note: The Node Runner Rewards Pool contains 350M tokens (35% of total). The above schedule shows the planned emission of these tokens over a 10-year period, with 248.5M tokens (71% of the pool) being distributed in the scheduled years, and the remaining 101.5M tokens (29% of the pool) held for potential future emissions based on network growth and needs.*
 
-### **Deflation** – *token burns reduce supply*
+#### Emission Rate Visualization
+
+![Emission Schedule](/emission-schedule.png)
+
+The emission schedule follows a carefully designed declining curve:
+- **Years 1-3**: High initial rewards (14% → 12% → 10%) to incentivize early network participation
+- **Years 4-7**: Moderate rewards (8% → 7% → 6% → 5%) during network growth phase
+- **Years 8-10**: Low, sustainable rewards (4% → 3% → 2%) as the network matures
+
+This gradual tapering ensures sufficient incentives for early participants while transitioning to a sustainable long-term emission model.
+
+#### Why This Emission Design Excels
+
+1. **Strategic Front-Loading**: Higher initial rewards provide compelling incentives to join during the critical network bootstrapping phase, while the tapering schedule ensures long-term value stability.
+
+2. **Compute-Linked Emission**: The breakthrough aspect of Dria's emission is that tokens are minted only after verifiable compute is delivered and cryptographically proven, creating perfect alignment between token supply growth and actual economic value production.
+
+3. **Dynamic Self-Regulation**: If compute demand slows, emissions automatically slow—creating an organic supply-demand balance without requiring governance intervention.
+
+4. **Verifiable Release**: The TOPLOC proof system ensures that every newly minted token corresponds to actual, verified computational work, creating unprecedented transparency in cryptoeconomics.
+
+**Example Scenario: Emission in Practice**
+
+Suppose the Node Runner Rewards Pool starts with 35% of the 1,000,000,000 `$DRIA` supply (i.e., 350,000,000 `$DRIA`). In Year 1, the protocol emits 14% of this pool (49,000,000 `$DRIA`) as rewards, but only as nodes deliver verified compute. If network usage is lower than anticipated, actual emission would be proportionally lower, ensuring supply growth matches real utility. This verifiable compute-linked approach makes `$DRIA` fundamentally different from time-based emission tokens, as supply expansion directly correlates with network value creation.
+
+### **Deflation**
+***Token burns reduce supply.***
 - **USD-to-Credit Purchases**: When users purchase platform credits using USD or fiat-equivalent stablecoins, Dria utilizes these funds to buy `$DRIA` tokens from the open market. These acquired `$DRIA` tokens are then immediately and verifiably burned, directly reducing the total circulating supply. This serves as a primary deflationary mechanism tied to platform adoption via fiat on-ramps.
 - When on-prem users convert `$DRIA` tokens *earned* from contributing idle compute back into platform credits, a portion of these earned tokens can also be burned, further contributing to supply reduction.
 - Accessing Oracle Node services, which involves users paying directly in `$DRIA` tokens (via an SDK) that are then converted to prepaid credits, also contributes to deflation; as these credits are consumed for Oracle requests, approximately 0.5-1% of the initially paid `$DRIA` tokens are burned, thereby being removed from circulation and supporting ongoing deflation.
+
+#### Integrated Supply Management System
+
+Dria's tokenomics creates a balanced ecosystem between token emission and deflationary pressure:
+
+1. **Supply Growth (Emission)**
+   - New `$DRIA` tokens enter circulation **only** when node runners deliver verified compute
+   - Emission is directly tied to network utility and economic output
+   - Rate decreases predictably over time according to the emission schedule
+
+2. **Supply Reduction (Deflation)**
+   - **USD Payments**: Fiat used to purchase `$DRIA` from market, then burned
+   - **On-Prem Conversions**: Earned tokens partially burned when converted to credits
+   - **Oracle Usage**: Portion of tokens burned during credit consumption
+
+3. **Economic Flow**
+   - Network utility drives usage payments
+   - Payments trigger deflationary burns
+   - Compute delivery unlocks new emissions
+   - Overall supply adjusts based on actual economic activity
+
+This closed-loop system creates a self-regulating token economy where increased adoption simultaneously increases both utility and scarcity of the `$DRIA` token.
 
 **Concrete Example: Burn Mechanism**
 
