@@ -1,25 +1,33 @@
 ---
-title: Appendix - TOPLOC Technical Details
-description: Technical explanation of the TOPLOC protocol for verifiable inference used in Dria.
+title: Appendix - TOPLOC: Enabling Trustless Compute Trading
+description: How TOPLOC's verifiable inference system enables the secure trading of compute for model inference in Dria.
 ---
 
-## TOPLOC: Verifiable Inference Mechanism
+## TOPLOC: The Technical Foundation for Trading Compute
 
-Dria employs the TOPLOC protocol (see [arXiv:2501.16007](https://arxiv.org/abs/2501.16007)) for its verifiable inference capabilities, offering users cryptographic trust without the substantial overhead typically associated with zk-ML techniques.
+Dria employs the TOPLOC protocol (see [arXiv:2501.16007](https://arxiv.org/abs/2501.16007)) as the cryptographic foundation that enables trustless trading of compute for inference. This technology provides the verification layer necessary for a global marketplace where idle compute can be securely traded for model access.
 
 **How it Works:**
 
-1.  **Activation & Instrumentation:** When a user toggles the **Verifiable Inference** option, the Dria compiler instruments each model shard. This process prepares the model to generate proofs about its internal computations.
+1.  **Activation & Instrumentation:** When a user toggles the **Verifiable Inference** option, the Dria compiler instruments each distributed model shard. This process prepares the model to generate proofs about its internal computations, ensuring that each node honestly executes its portion of the model.
 
 2.  **Commitment to Top-k Activations:** The instrumented model commits to the top-k values of its internal hidden states. This commitment is achieved using an injective modulus and polynomial interpolation, which are core components of the TOPLOC methodology.
 
-3.  **Proof Generation & Submission:** After processing, nodes return the computational result along with a compact proof. This proof comprises the polynomial coefficients derived during the commitment phase, the modulus used, and the value of 'k'.
+3.  **Proof Generation & Submission:** After processing, compute-providing nodes return the computational result along with a compact proof. This proof comprises the polynomial coefficients derived during the commitment phase, the modulus used, and the value of 'k'.
 
 4.  **Verification on Solana:** The submitted proof is then verified by Solana smart contracts. The verifier utilizes "prefill" data to efficiently reconstruct the relevant hidden states of the model. It then compares a locally computed polynomial (based on the reconstructed states) with the polynomial submitted by the prover node.
 
-5.  **Rapid Verification & Consequences:** This verification process is highly efficient, typically completing in less than 1 second.
-    *   **Proof Passes:** If the verification is successful, the node's reward for the computation is unlocked.
-    *   **Proof Fails or Times Out:** If the proof is invalid or not submitted in time, the node's staked `$DRIA` is slashed, and the inference job is re-queued to be processed by another node.
+5.  **Rapid Verification & Economic Consequences:** This verification process is highly efficient, typically completing in less than 1 second.
+    *   **Proof Passes:** If the verification is successful, the node's reward for providing compute is unlocked, enabling the virtuous cycle of trading compute for tokens.
+    *   **Proof Fails or Times Out:** If the proof is invalid or not submitted in time, the node's staked `$DRIA` is slashed, and the inference job is re-queued to be processed by another node. This economic penalty ensures only honest compute providers participate.
 
-**Efficiency:**
-The TOPLOC approach is significantly more efficient than traditional zkML methods. Both the size of the proof and the time required for verification scale linearly with 'k' (the number of top activations considered), making it a practical solution for verifiable AI. 
+**Efficiency Benefits for Compute Trading:**
+The TOPLOC approach is significantly more efficient than traditional zkML methods. Both the size of the proof and the time required for verification scale linearly with 'k' (the number of top activations considered), making it a practical solution for verifiable AI at scale. This efficiency is crucial for Dria's model of trading compute for inference, as it minimizes the overhead associated with verification while maintaining strong cryptographic guarantees.
+
+**Why This Matters for the Trading Compute Model:**
+TOPLOC's lightweight verification is the technical foundation that enables Dria's core value proposition. Without efficient verification, trading compute for inference would be either prohibitively expensive (with heavy zero-knowledge proofs) or vulnerable to dishonest actors (without verification). TOPLOC strikes the optimal balance, creating a marketplace where:
+
+1. Compute providers can trustlessly contribute resources
+2. Model users can be confident in execution integrity
+3. The network can efficiently allocate rewards based on verified contributions
+4. The economic model of trading compute for inference can function at scale 

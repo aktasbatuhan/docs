@@ -1,29 +1,29 @@
 ---
 title: Core Economic Engine
-description: Understanding Dria's mechanisms for value retention, inflation control, and deflationary pressure.
+description: How Dria's tokenomics enable trading compute for inference while ensuring value retention and balanced token supply.
 ---
 
 ## Core Economic Engine
 
-This section explains the fundamental economic drivers of the Dria network, focusing on how value is retained, how token supply is managed through inflation, and how deflationary pressures are introduced.
+This section explains the fundamental economic drivers of the Dria network, focusing on how the "trade compute for inference" model is supported through value retention mechanisms, careful token supply management, and deflationary pressures.
 
 ### **Retention**
-***Value stays in the ecosystem.***
+***Value stays in the ecosystem, creating a closed economic loop.***
 
-The protocol locks all payments as non-withdrawable credits, which users can only spend on network services. This creates continuous demand and value retention.
+The protocol locks all payments as non-withdrawable credits, which users can only spend on model inference. This design is intentional – by preventing outflows, we create continuous demand for the token and ensure that value remains within the Dria economy. This retention mechanism is central to enabling the core proposition: trading idle compute for access to powerful multimodal models.
 
 ### **Emission & Inflation**
-***Supply grows only after compute delivered.***
-- The protocol mints new `$DRIA` tokens only as rewards for node runners from the "Node Runner Rewards Pool" allocation, after verifying their compute delivery (measured in FLOPS).
+***Supply grows only when real value is delivered.***
+- The protocol mints new `$DRIA` tokens only as rewards for node runners from the "Node Runner Rewards Pool" allocation, after verifying their compute delivery (measured in FLOPS) for model inference.
 - **Emission Period:** Rewards distribute over 10 years, ensuring sustainable network growth with the potential for extending beyond the initial period based on network needs.
-- **Compute-Linked Issuance:** Unlike time-based emissions, new tokens are created only when real computational work is delivered and cryptographically verified, ensuring that supply growth directly correlates with network utility.
+- **Compute-Linked Issuance:** Unlike time-based emissions, new tokens are created only when real computational work for model inference is delivered and cryptographically verified, ensuring that supply growth directly correlates with network utility.
 - **Disinflationary Model:** Annual emissions follow a strategic curve, starting higher (14% in year 1) to bootstrap the network, then gradually decreasing to 2% by year 10.
 
 #### Token Supply Allocation
 
 | Allocation Category | Percentage | Token Amount | Distribution Details |
 |---------------------|------------|--------------|----------------------|
-| Node Runner Rewards Pool | 35% | 350,000,000 | Emitted over 10 years based on verified compute delivery |
+| Node Runner Rewards Pool | 35% | 350,000,000 | Emitted over 10 years based on verified compute delivery for inference tasks |
 | Ecosystem Fund & Community | 30% | 300,000,000 | Strategic releases for ecosystem development and community initiatives |
 | Private Round Investors | 16% | 160,000,000 | Completed private funding rounds |
 | Current Investment Round | 5% | 50,000,000 | Ongoing at $240M valuation |
@@ -54,33 +54,33 @@ The protocol locks all payments as non-withdrawable credits, which users can onl
 ![Emission Schedule](/emission-schedule.png)
 
 The emission schedule follows a carefully designed declining curve:
-- **Years 1-3**: High initial rewards (14% → 12% → 10%) to incentivize early network participation
+- **Years 1-3**: High initial rewards (14% → 12% → 10%) to incentivize early participation in providing compute
 - **Years 4-7**: Moderate rewards (8% → 7% → 6% → 5%) during network growth phase
 - **Years 8-10**: Low, sustainable rewards (4% → 3% → 2%) as the network matures
 
 This gradual tapering ensures sufficient incentives for early participants while transitioning to a sustainable long-term emission model.
 
-#### Why This Emission Design Excels
+#### Why This Emission Design Enables Trading Compute for Inference
 
 1. **Strategic Front-Loading**: Higher initial rewards provide compelling incentives to join during the critical network bootstrapping phase, while the tapering schedule ensures long-term value stability.
 
 2. **Compute-Linked Emission**: The breakthrough aspect of Dria's emission is that tokens are minted only after verifiable compute is delivered and cryptographically proven, creating perfect alignment between token supply growth and actual economic value production.
 
-3. **Dynamic Self-Regulation**: If compute demand slows, emissions automatically slow—creating an organic supply-demand balance without requiring governance intervention.
+3. **Dynamic Self-Regulation**: If demand for inference slows, emissions automatically slow—creating an organic supply-demand balance without requiring governance intervention.
 
 4. **Verifiable Release**: The TOPLOC proof system ensures that every newly minted token corresponds to actual, verified computational work, creating unprecedented transparency in cryptoeconomics.
 
 **Example Scenario: Emission in Practice**
 
-Suppose the Node Runner Rewards Pool starts with 35% of the 1,000,000,000 `$DRIA` supply (i.e., 350,000,000 `$DRIA`). In Year 1, the protocol emits 14% of this pool (49,000,000 `$DRIA`) as rewards, but only as nodes deliver verified compute. If network usage is lower than anticipated, actual emission would be proportionally lower, ensuring supply growth matches real utility. This verifiable compute-linked approach makes `$DRIA` fundamentally different from time-based emission tokens, as supply expansion directly correlates with network value creation.
+Suppose the Node Runner Rewards Pool starts with 35% of the 1,000,000,000 `$DRIA` supply (i.e., 350,000,000 `$DRIA`). In Year 1, the protocol emits 14% of this pool (49,000,000 `$DRIA`) as rewards, but only as nodes deliver verified compute for model inference. If network usage is lower than anticipated, actual emission would be proportionally lower, ensuring supply growth matches real utility. This verifiable compute-linked approach makes `$DRIA` fundamentally different from time-based emission tokens, as supply expansion directly correlates with network value creation.
 
 ### **Deflation**
-***Token burns reduce supply.***
+***Token burns reduce supply, reinforcing the trading compute model.***
 - **USD-to-Credit Purchases**: When users purchase platform credits using USD or fiat-equivalent stablecoins, Dria utilizes these funds to buy `$DRIA` tokens from the open market. These acquired `$DRIA` tokens are then immediately and verifiably burned, directly reducing the total circulating supply. This serves as a primary deflationary mechanism tied to platform adoption via fiat on-ramps.
-- When on-prem users convert `$DRIA` tokens *earned* from contributing idle compute back into platform credits, a portion of these earned tokens can also be burned, further contributing to supply reduction.
-- Accessing Oracle Node services, which involves users paying directly in `$DRIA` tokens (via an SDK) that are then converted to prepaid credits, also contributes to deflation; as these credits are consumed for Oracle requests, approximately 0.5-1% of the initially paid `$DRIA` tokens are burned, thereby being removed from circulation and supporting ongoing deflation.
+- **Trading Earned Compute for Inference**: When on-prem users convert `$DRIA` tokens *earned* from contributing idle compute back into platform credits for inference, a portion of these earned tokens can also be burned. This reinforces the core value proposition of trading compute for inference while further contributing to supply reduction.
+- **Oracle Usage**: Accessing Oracle Node services, which involves users paying directly in `$DRIA` tokens (via an SDK) that are then converted to prepaid credits, also contributes to deflation; as these credits are consumed for Oracle requests, approximately 0.5-1% of the initially paid `$DRIA` tokens are burned, thereby being removed from circulation and supporting ongoing deflation.
 
-#### Integrated Supply Management System
+#### Integrated Supply Management System for the Trading Compute Model
 
 Dria's tokenomics creates a balanced ecosystem between token emission and deflationary pressure:
 
@@ -91,17 +91,25 @@ Dria's tokenomics creates a balanced ecosystem between token emission and deflat
 
 2. **Supply Reduction (Deflation)**
    - **USD Payments**: Fiat used to purchase `$DRIA` from market, then burned
-   - **On-Prem Conversions**: Earned tokens partially burned when converted to credits
+   - **On-Prem Conversions**: Tokens earned from contributing compute are partially burned when converted to credits
    - **Oracle Usage**: Portion of tokens burned during credit consumption
 
-3. **Economic Flow**
-   - Network utility drives usage payments
+3. **The Trading Compute Flywheel**
+   - Model inference drives usage payments
    - Payments trigger deflationary burns
    - Compute delivery unlocks new emissions
+   - Earned tokens can be used to access inference
    - Overall supply adjusts based on actual economic activity
 
-This closed-loop system creates a self-regulating token economy where increased adoption simultaneously increases both utility and scarcity of the `$DRIA` token.
+This closed-loop system creates a self-regulating token economy where increased adoption simultaneously increases both utility and scarcity of the `$DRIA` token, directly supporting our core principle of trading idle compute for inference.
 
-**Concrete Example: Burn Mechanism**
+**Concrete Example: The Trading Compute Model in Action**
 
-When an on-prem customer earns 10,000 `$DRIA` from contributing idle compute and converts them to platform credits, the protocol burns these tokens. This removes 10,000 `$DRIA` from circulation (~0.001% of total supply in our example), contributing to long-term deflationary pressure and supporting token value. 
+When an on-prem customer earns 10,000 `$DRIA` from contributing idle compute to the network and converts them to platform credits for accessing model inference, the protocol burns a portion of these tokens. This mechanism:
+
+1. Removes `$DRIA` from circulation (~0.001% of total supply in our example)
+2. Contributes to long-term deflationary pressure
+3. Supports token value stability
+4. Demonstrates the practical realization of the "trade compute for inference" principle
+
+This example illustrates how participants can leverage their idle compute resources to gain access to powerful multimodal models while simultaneously strengthening the overall token economy. 

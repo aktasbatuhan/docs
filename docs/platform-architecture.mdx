@@ -1,45 +1,53 @@
 ---
-title: Platform Architecture & Usage
-description: Overview of how Dria leverages Solana, its various usage modes, and a summary of key token flows.
+title: Platform Architecture for Trading Compute
+description: How Dria's technical architecture enables the trading of compute for inference and ensures value retention within the ecosystem.
 ---
 
 
-## Solana: The onchain Settlement Layer
+## Solana: The Backbone of the Compute Trading Marketplace
 
-Dria leverages Solana for:
-- **High-throughput settlement** – The protocol processes all payments, assignments, and rewards at sub-second speeds with predictable low fees (~$0.0005 per transaction).
-- **onchain scheduling** – Smart contracts match jobs to nodes, escrow payments, and issue work vouchers within the same block (400ms).
-- **Verifiable inference** – The protocol validates all compute through onchain commitments, with TOPLOC proofs enabling efficient verification without costly zero-knowledge overhead.
-- **Composability** – All token flows operate in a single, programmable environment, allowing seamless interaction with the broader Solana ecosystem.
+Dria leverages Solana as the settlement layer that makes trading compute for inference possible:
+- **High-throughput settlement** – The protocol processes all compute trades, payments, model shard assignments, and node rewards at sub-second speeds with predictable low fees (~$0.0005 per transaction).
+- **Trustless scheduling** – Smart contracts match model inference tasks to optimal nodes, escrow payments, and issue work vouchers within the same block (400ms), enabling efficient coordination without intermediaries.
+- **Verifiable model execution** – The protocol validates all compute through onchain commitments, with TOPLOC proofs enabling efficient verification of model shard execution without costly zero-knowledge overhead.
+- **Composability for value retention** – All token flows operate in a single, programmable environment, ensuring that value remains within the ecosystem while allowing seamless interaction with the broader Solana ecosystem.
 
 ---
 
-## Usage Modes
+## Trading Compute: Usage Modes
 
-### **A. Network Usage**
-- Users consume credits for compute on the Dria network.
-- If paying with USD/Fiat: Dria uses the fiat to buy `$DRIA` from the market, burns these tokens, and issues equivalent credits to the user. This is a deflationary event.
-- If paying with `$DRIA`: Tokens are directly converted to locked credits.
-- All requests are paid from these prepaid credits.
+### **A. Direct Inference Access (Consuming Compute)**
+- Users consume credits to access powerful multimodal models on the Dria network.
+- If paying with USD/Fiat: Dria uses the fiat to buy `$DRIA` from the market, burns these tokens, and issues equivalent credits to the user. This is a deflationary event that increases token scarcity.
+- If paying with `$DRIA`: Tokens are directly converted to locked credits for model inference.
+- All model inference requests are paid from these prepaid credits, which can only be spent within the ecosystem.
 
-### **B. On-Prem Usage**
-- Enterprises can run Dria's compiler on their own infrastructure.
+### **B. Hybrid Usage (Trading Idle Compute)**
+- Enterprises can run Dria's compiler on their own infrastructure for their primary workloads.
 - They typically prepay for credits in USD. This transaction follows the same buy-and-burn mechanism: Dria uses the USD to purchase `$DRIA` from the market, these tokens are burned, and the enterprise receives an equivalent value in locked credits.
-- Idle compute contributed back to the Dria network earns `$DRIA`. These earned tokens can then be converted back into platform credits (which may also involve a burn of the earned tokens), further reducing operational costs and contributing to deflation.
+- **Trading Compute for Inference**: When utilization is low, their idle compute is contributed back to the network, earning `$DRIA` tokens. These earned tokens can then be converted back into platform credits for their own inference needs, demonstrating the core principle of trading compute for inference. This conversion may involve a partial burn of the earned tokens, further reducing operational costs and contributing to deflation.
 
-### **C. Oracle Node Usage**
+### **C. Oracle Node Services**
 - Lightweight SDK allows direct `$DRIA` payments for Oracle Node services.
 - These `$DRIA` tokens are converted to credits. Each request consumes credits, and a portion of the underlying `$DRIA` is burned, supporting deflation.
 
 ---
 
-## Summary Table: Key Flows & Mechanisms
+## The Unified Compute Trading System
 
-| Flow                | Payment Type | Conversion / Token Action                                  | Credit Lock | Burn | Mint | Node Reward | Staking Yield | Deflation |
-|---------------------|-------------|------------------------------------------------------------|-------------|------|------|-------------|---------------|-----------|
-| Network (USD)       | USD/Fiat    | Fiat used to buy `$DRIA` from market, then `$DRIA` is burned | Yes         | Yes  | No   | Yes         | Yes           | Yes       |
-| Network (`$DRIA`)     | `$DRIA`       | Direct `$DRIA` to credits                                    | Yes         | No   | No   | Yes         | Yes           | No        |
-| On-Prem (Initial USD)| USD         | Fiat used to buy `$DRIA` from market, then `$DRIA` is burned | Yes         | Yes  | No   | (Earned)    | (Earned)      | Yes       |
-| On-Prem (Earned `$DRIA` conversion to credits) | `$DRIA` (Earned) | Earned `$DRIA` to credits                                  | Yes         | Yes  | No   | Yes         | Yes           | Yes       |
-| Oracle Node         | `$DRIA`       | Direct `$DRIA` to credits, portion burned on use             | Yes         | Yes  | No   | Yes         | Yes           | Yes       |
-| Node Rewards        | -           | -                                                          | -           | No   | Yes  | Yes         | Yes           | No        | 
+| Flow                | What's Traded | Token Action | Value Retention | Deflation Effect | 
+|---------------------|---------------|--------------|-----------------|------------------|
+| Direct Access (USD) | USD → Model Inference | USD buys & burns `$DRIA`, issues locked credits | Value locked in credits | Strong (Direct burn) |
+| Direct Access (`$DRIA`) | `$DRIA` → Model Inference | `$DRIA` converted to locked credits | Value locked in credits | Neutral |
+| Hybrid: Initial Setup | USD → Credits for own inference | USD buys & burns `$DRIA`, issues locked credits | Value locked in credits | Strong (Direct burn) |
+| **Trading Compute** | **Idle Compute → Inference Credits** | **Earned `$DRIA` converted to credits** | **Value stays in system** | **Moderate (Partial burn)** |
+| Oracle Services | `$DRIA` → Oracle Data | `$DRIA` to credits, portion burned on use | Value locked in credits | Moderate (Usage burn) |
+| Node Rewards | Compute → `$DRIA` Tokens | New `$DRIA` minted for verified compute | Creates value for trade | Emission counterbalance |
+
+This architecture creates a closed economic loop where:
+1. **Value enters** - Through USD payments (burning `$DRIA`) or through contributed compute
+2. **Value remains** - As non-withdrawable credits that can only be spent on inference
+3. **Compute is traded** - Nodes provide compute and earn tokens
+4. **Value circulates** - Earned tokens can be used for model inference, completing the cycle
+
+The result is a self-reinforcing ecosystem where participants can either pay for model inference directly or trade their idle compute to access the same capabilities, all while ensuring value remains within the system. 

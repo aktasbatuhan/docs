@@ -1,37 +1,46 @@
 ---
 title: Node Incentives & Staking
-description: Details on how node runners are rewarded through compute tasks and staking, including staking parameters and examples.
+description: How compute providers are rewarded for contributing to the Dria network, enabling the trading compute for inference model.
 ---
 
-## Node Runner Incentives & Staking
+## Node Runner Incentives: Trading Compute for Tokens
 
-This page outlines how Dria incentivizes node runners through compute-based rewards and staking yields, crucial for maintaining a robust and reliable decentralized AI compute network.
+This page outlines how Dria incentivizes node runners who provide the compute backbone of the network. By contributing computational resources, these participants earn `$DRIA` tokens they can either use for their own model inference or trade in the broader ecosystem.
 
 ### **A. Compute-Based Rewards**
-- Node runners supply compute (FLOPS) to the network.
-- The protocol pays rewards proportional to verified compute, from the emissions schedule.
-- **For verifiable inference tasks:** The protocol only rewards nodes whose computations pass verification.
-- Formula: `Reward = FLOPS_delivered * Reward_Rate` (The `Reward_Rate` varies based on network demand and the disinflationary schedule, targeting approximately [X-Y] `$DRIA` per million FLOPS).
+- Node runners supply compute (FLOPS) to process distributed, sharded multimodal models on the network.
+- The protocol pays rewards proportional to verified compute delivered, from the emissions schedule.
+- **For verifiable inference tasks:** The protocol only rewards nodes whose computations of model shards pass verification.
+- Formula: `Reward = FLOPS_delivered * Reward_Rate` (The `Reward_Rate` varies based on demand for model inference and the disinflationary schedule, targeting approximately [X-Y] `$DRIA` per million FLOPS).
 
 ### **B. Staking Yield**
-- Node runners must stake `$DRIA` tokens to participate.
-- Active nodes (meeting uptime targets) earn additional yield on their staked tokens.
-- Formula: `Yield = Tokens_staked * Yield_Rate * Active_Hours` (targeting annual yields of [10-90%] based on network conditions and node reliability).
-- Total earnings = Compute rewards + Staking yield.
+- Node runners must stake `$DRIA` tokens to participate in the compute marketplace.
+- Active nodes (meeting uptime targets for model inference tasks) earn additional yield on their staked tokens.
+- Formula: `Yield = Tokens_staked * Yield_Rate * Active_Hours` (targeting annual yields of [10-90%] based on network demand and node reliability).
+- Total earnings = Compute rewards + Staking yield, providing dual incentives for compute providers.
 
-### **C. Staking Parameters (Placeholders)**
-- **Minimum Stake:** To participate, node runners must stake a minimum of [e.g., 100] `$DRIA` per active node. This baseline stake signifies commitment to the network.
-- **Device Eligibility:** Any device capable of contributing verifiable FLOPS and meeting the network's operational standards is eligible to be staked by its operator.
-- **Unstaking Period:** To maintain network stability, the protocol enforces a [e.g., 7-day] cooldown period when unstaking `$DRIA` tokens. During this cooldown, tokens earn no yield and remain untransferable. After cooldown, tokens become fully liquid.
-- **Collateral Custody (Program-Controlled Escrow):** The protocol holds all staked `$DRIA` tokens in a program-controlled escrow smart contract on Solana. This means neither Dria nor any third party can access or move your collateral only the contract's logic (e.g., for slashing, reward distribution, or unstaking) can release funds. This ensures maximum security, transparency, and trust for all network participants.
+### **C. Staking Parameters for Compute Providers**
+- **Minimum Stake:** To participate, node runners must stake a minimum of [e.g., 100] `$DRIA` per active node. This baseline stake signifies commitment to reliably providing compute to the network.
+- **Device Eligibility:** Any device capable of contributing verifiable FLOPS and meeting the network's operational standards for model inference is eligible to be staked by its operator.
+- **Unstaking Period:** To maintain network stability and quality of service, the protocol enforces a [e.g., 7-day] cooldown period when unstaking `$DRIA` tokens. During this cooldown, tokens earn no yield and remain untransferable. After cooldown, tokens become fully liquid.
+- **Collateral Custody (Program-Controlled Escrow):** The protocol holds all staked `$DRIA` tokens in a program-controlled escrow smart contract on Solana. This means neither Dria nor any third party can access or move your collateral—only the contract's logic (e.g., for slashing in case of failed model execution, reward distribution, or unstaking) can release funds. This ensures maximum security, transparency, and trust for all participants in the compute marketplace.
 
-**Slashing:**
-The protocol slashes staked `$DRIA` to disincentivize malicious behavior, prolonged downtime, or service failures. For verifiable inference tasks, the protocol slashes nodes that fail verification by approximately [5-20%] of their stake. This mechanism ensures the integrity of the network. Specific slashing triggers and percentages appear in operational guidelines.
+**Slashing as Quality Control:**
+The protocol slashes staked `$DRIA` to disincentivize malicious behavior, prolonged downtime, or service failures. For verifiable inference tasks, the protocol slashes nodes that fail to properly execute their portion of a sharded model by approximately [5-20%] of their stake. This mechanism ensures the reliability and integrity of inference results. Specific slashing triggers and percentages appear in operational guidelines.
 
-#### Example: Node Runner Reward Calculation
+### The Complete Compute Trading Cycle
 
-Suppose:
-- Node delivers **10,000,000 FLOPS** for a task
+Node runners participate in a virtuous cycle:
+
+1. **Stake & Provide Compute** - Secure the network by staking tokens and providing computational resources
+2. **Earn Tokens** - Receive `$DRIA` rewards for successfully processing model shards
+3. **Use or Trade** - Either use earned tokens for your own model inference needs or hold them
+4. **Compound Returns** - Reinvest earnings to increase stake and compute contribution
+
+#### Example: The Trading Compute Model in Action
+
+Suppose a node runner contributes compute to the network:
+- Node delivers **10,000,000 FLOPS** for multimodal model inference
 - **Reward Rate** = 0.0001 `$DRIA` per FLOP
 - **Staked Amount** = 1,000 `$DRIA`
 - **Yield Rate** = 0.01% per hour
@@ -49,12 +58,19 @@ Suppose:
 
     1,000 `$DRIA` (compute) + 10 `$DRIA` (yield) = 1,010 `$DRIA`
 
-#### Concrete Example: Staking APR Calculation
+With these earned tokens, the node runner can:
+- Run approximately 1,010 `$DRIA` worth of model inference for their own use (trading their compute for inference)
+- Convert to credits with potential partial burning (supporting token value)
+- Hold the tokens as they potentially appreciate with network growth
 
-Suppose you stake 1,000 `$DRIA` for one year. If the staking yield rate is 0.01% per hour and your node is active 100% of the time (8,760 hours/year):
+#### Concrete Example: Staking Returns For Compute Providers
+
+Suppose you stake 1,000 `$DRIA` for one year while providing compute. If the staking yield rate is 0.01% per hour and your node is active serving model inference tasks 100% of the time (8,760 hours/year):
 
     Annual Staking Yield = 1,000 `$DRIA` * 0.0001 * 8,760 = 876 `$DRIA`
 
     Staking APR = (876 / 1,000) * 100% = 87.6%
 
-If your node is only active 50% of the time, your APR would be half that (43.8%). This allows you to sanity-check the impact of uptime and rate on your staking returns. 
+If your node is only active 50% of the time, your APR would be half that (43.8%). 
+
+This staking yield is in addition to direct compute rewards, creating compelling economics for those trading their compute for tokens, which can in turn be used for inference—exactly the core value proposition of Dria's tokenomics. 

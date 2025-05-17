@@ -1,28 +1,28 @@
 ---
-title: Payment Flows
-description: Explanation of Dria's dual on-ramps for payments (USD/Fiat and Direct `$DRIA`) and the Unified Credit System.
+title: Payment Flows for Model Access
+description: How Dria's dual payment on-ramps enable trading compute for inference and ensure value retention within the ecosystem.
 ---
 
-## Payment Flows: Dual On-Ramps
+## Payment Flows: Value Retention By Design
 
-Dria supports two primary payment flows for enterprise and developer users:
+Dria supports two primary payment flows, both designed to lock value within the ecosystem and support the core model of trading compute for inference:
 
 ### **A. USD / Fiat / Stablecoin Payments**
 - **Process:**
-    1. Users pay in USD (or stablecoins like USDC).
+    1. Users pay in USD (or stablecoins like USDC) to access advanced model inference.
     2. Dria manages a dedicated wallet for each customer.
     3. After deducting a small processing fee (~1-2%), Dria uses the net USD amount to purchase `$DRIA` tokens from the open market at the prevailing rate (e.g., daily TWAP).
     4. **These purchased `$DRIA` tokens are immediately burned**, permanently reducing the total circulating supply.
-    5. An equivalent value in **locked credits** (non-withdrawable) is allocated to the user's account.
-    6. All Dria network activity and service consumption by the user then draws from these locked credits.
+    5. An equivalent value in **locked credits** (non-withdrawable) is allocated to the user's account specifically for model inference.
+    6. All model inference and service consumption by the user then draws from these locked credits.
 
 ### **B. Direct `$DRIA` Token Payments**
-1. Users pay directly with `$DRIA` tokens from their wallets.
+1. Users pay directly with `$DRIA` tokens from their wallets to access multimodal inference.
 2. The protocol converts 100% of these tokens to locked credits with no fee.
-3. Credits become immediately available for network usage.
+3. Credits become immediately available for model inference on the network.
 
-**Unified Credit System:**
-All payments (fiat or crypto) become locked credits that users can only spend on network services, ensuring revenue retention within the ecosystem.
+**Unified Credit System and Value Retention:**
+All payments (fiat or crypto) become locked credits that users can only spend on inference services. This mechanism is central to Dria's value proposition - it ensures that value remains within the ecosystem, creating continuous demand for the token and counterbalancing the emission of new tokens to compute providers.
 
 ### **C. Oracle Node Service Payments**
 Users accessing Dria's Oracle Node services follow a specific payment flow:
@@ -38,5 +38,16 @@ Users accessing Dria's Oracle Node services follow a specific payment flow:
     *   Similar to other payment flows, the `$DRIA` tokens collected from Oracle Node service usage are channeled into the ecosystem's treasury. These funds contribute to supporting node runner rewards and overall network health. 
 
 ---
+
+## The Virtuous Cycle in Action
+
+These payment mechanisms create a virtuous cycle:
+
+1. **Value Enters** - Through USD/fiat payments that buy and burn `$DRIA`, increasing scarcity.
+2. **Value Remains Locked** - As all payments convert to non-withdrawable credits for inference.
+3. **Compute Providers Earn** - By contributing resources to the network.
+4. **Earned Value Recirculates** - As providers reinvest their earned tokens to access inference themselves.
+
+This closed-loop system enables the "trade idle compute for inference" model that defines Dria's approach, creating natural deflationary pressure and ensuring deep retention of value within the ecosystem.
 
 **For a detailed walkthrough of these payment flows from a user's perspective, including step-by-step explanations of credits purchasing, network usage, and on-prem deployments, see the [User Experience](/docs/user-experience) page.** 

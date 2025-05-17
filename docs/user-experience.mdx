@@ -1,24 +1,24 @@
 ---
-title: User Experience
-description: A step‑by‑step walkthrough of what it feels like to run AI on the Dria Network or inside your own data‑center with the same license, the same compiler, and the same credit balance.
+title: Trading Compute for Inference: User Experience
+description: How Dria enables users to either pay for or contribute compute to access powerful multimodal AI models.
 ---
 
-## End‑User Experience
+## Trading Compute for Model Access: The User Experience
 
-Dria hides the complexity of distributed hardware, on‑chain incentives and verifiable proofs behind one unified workflow.
-Whether you burst to thousands of peer‑to‑peer nodes or keep everything on‑prem, the surface‑area for engineers and finance teams is identical.
+Dria hides the complexity of distributed hardware, on‑chain incentives, and verifiable proofs behind one unified workflow specifically designed for trading compute for inference. Whether you're accessing powerful multimodal models through the network or contributing your own hardware, the surface-area for engineers and finance teams remains identical.
 
-### 1. Buying Credits
+### 1. Getting Access to Models: Credits and Compute
 
-| Option                   | How It Works                                                                                                                               | Result                                                                 |
+| Access Method                   | How It Works                                                                                                                               | Result                                                                 |
 |--------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------|
-| USD / Stable‑coin (USDC) | Pay invoice or swipe card → Dria uses the USD to buy `$DRIA` from the market at the daily TWAP (minus ~1–2% FX fee), then burns these `$DRIA`. | `$DRIA`-equivalent credits appear in your dashboard, locked for compute spend. The burn reduces `$DRIA` supply. |
-| Direct `$DRIA`             | Send tokens straight to your project wallet; no fee.                                                                                       | Credits top‑up instantly, 1:1.                                         |
+| USD / Stable‑coin (USDC) | Pay invoice or swipe card → Dria uses the USD to buy `$DRIA` from the market at the daily TWAP (minus ~1–2% FX fee), then burns these `$DRIA`. | `$DRIA`-equivalent credits appear in your dashboard, locked for model inference. The burn reduces `$DRIA` supply, creating deflationary pressure. |
+| Direct `$DRIA` Payment          | Send tokens straight to your project wallet; no fee.                                                                                       | Credits for model inference top‑up instantly, 1:1.                                         |
+| Contributing Compute    | Provide compute resources to the network, earning tokens.                                                                             | Earn `$DRIA` tokens that can be converted to credits for accessing models yourself. |
 
-**Credits represent value for compute:** USD payments result in a `$DRIA` burn, while direct `$DRIA` payments lock up existing tokens. All credits can only be spent on FLOPS.
+**Credits represent access rights to multimodal models:** USD payments result in a `$DRIA` burn (increasing scarcity), while direct `$DRIA` payments and compute contributions lock value within the ecosystem. All credits can only be spent on model inference, ensuring value remains in the system.
 
 
-### 2. Running on the Dria Network
+### 2. Accessing Powerful Models on the Dria Network
 
 ```mermaid
 sequenceDiagram
@@ -28,61 +28,62 @@ sequenceDiagram
     participant Workers as GPU • NPU • CPU Swarm
     participant Solana
     
-    User->>API: POST /inference (model, data, QoS)
+    User->>API: POST /inference (multimodal_model, data, QoS)
     API-->>Solana: Pay with locked credits
     Solana-->>Scheduler: Voucher + Budget
-    Scheduler-->>Workers: Shard graph → Send work
+    Scheduler-->>Workers: Shard model → Send work
     Workers-->>Solana: TOPLOC proof + result hash
     Solana-->>Scheduler: Verified / Penalise
     Scheduler-->>API: Signed result
-    API-->>User: Response (output, cost, proof_link)
+    API-->>User: Response (model output, cost, proof_link)
 ```
 
-1. **Submit** – Curl, SDK, or REST; specify model name, max latency, budget ceiling.
+1. **Submit** – Curl, SDK, or REST; specify the multimodal model name (e.g., a 70B+ parameter model), max latency, budget ceiling.
 2. **Atomic Pay + Match** – In the same Solana block the contract:
    * debits your credits,
-   * shards the graph, solves for cheapest + fastest node mix,
-   * escrows rewards.
-3. **Execution** – GPUs in SF, NPUs in Berlin, CPUs in Bangalore run their slices in parallel.
+   * shards the model across distributed hardware, solves for cheapest + fastest node mix,
+   * escrows rewards for compute providers.
+3. **Execution** – GPUs in SF, NPUs in Berlin, CPUs in Bangalore run their slices of the model in parallel.
 4. **Proof & Payout** – Nodes post TOPLOC proofs; good shards auto‑claim rewards, bad shards are re‑queued and slashed.
-5. **Retrieve** – You receive the stitched result, cost breakdown, and a link to the on‑chain proof tx.
+5. **Retrieve** – You receive the stitched model result, cost breakdown, and a link to the on‑chain proof tx.
 
-### 3. Running On‑Prem with Dria the License
+### 3. Contributing Compute and Trading It for Inference
 
-Same compiler, same APIs only the target cluster changes.
+Same compiler, same APIs—only the direction of the compute trade changes.
 
 1. **Install** – `pip install dnet && dnet init` on your cluster.
-2. **License Activation** – Point the CLI to your project wallet; credits are already there.
-3. **Compile Once** – Dria's topology‑aware compiler inspects your racks (H100s next to EPYC CPUs, maybe a few NPUs), auto‑shards the model, and stores a binary plan.
-4. **Serve /train /inference** – Hit the same REST endpoints your devs use against the public network.
-5. **Idle Compute Back‑haul (opt‑in)** – Flag `--export-idle`; when utilisation < X% the cluster back‑fills network jobs, earning `$DRIA` that are instantly burnt into fresh credits slashing your effective TCO.
+2. **License Activation** – Point the CLI to your project wallet; credits earned from your compute contributions are already there.
+3. **Compile Once** – Dria's topology‑aware compiler inspects your racks (H100s next to EPYC CPUs, maybe a few NPUs), auto‑shards large multimodal models, and stores a binary plan.
+4. **Dual Usage** – Use your hardware for your own models while also contributing to the network:
+   * **Your Models**: Hit the same REST endpoints for your own inference needs.
+   * **Trade Idle Compute** – Flag `--export-idle`; when utilisation < X% the cluster contributes to network inference tasks, earning `$DRIA` that are instantly converted into fresh credits for your own model inference, drastically reducing your effective TCO.
 
-**Accounting looks like this:**
+**The Trading Compute Model in Action:**
 
-| Flow | Credits | Token Effect |
-|------|---------|--------------|
-| You buy $10k USD → credits | +10k    | -10k worth of `$DRIA` bought & burned from supply |
-| You run jobs on‑prem | −8k     | none (credits consumed) |
-| You export 200 GPU‑hr idle | +2k (credits earned via `$DRIA`) | `$DRIA` earned by your compute is then converted to credits (typically involving a burn of those earned `$DRIA`, further reducing supply) |
+| Flow | Credits | Token Effect | Value Proposition |
+|------|---------|--------------|-------------------|
+| You buy $10k USD → credits | +10k credits    | -10k worth of `$DRIA` bought & burned from supply | Direct financial access to models |
+| You run your own models on‑prem | −8k credits     | none (credits consumed) | Models run on your terms |
+| You export 200 GPU‑hr idle compute | +2k credits (earned via `$DRIA`) | `$DRIA` earned by your compute is converted to credits (typically with partial burn) | **Trading idle compute for inference access** |
 
-Result: Significantly reduced net spend due to on-prem contributions, strong deflationary pressure on the `$DRIA` token from both initial USD purchases and on-prem idle compute conversion, and 100% utilisation of your silicon.
+Result: Significantly reduced net spend by trading your idle compute for inference credits, strong deflationary pressure on the `$DRIA` token, and 100% utilisation of your silicon—exactly the core value proposition of Dria's tokenomics.
 
-### 4. Why Sharding & Scheduling Matter to You
-* **No single device limit** – 70B Llama on an RTX‑4090? The compiler streams KV‑cache across three consumer cards + one CPU.
-* **Hardware at fair value** – The scheduler bids CPUs for tokenisation, GPUs for dense MatMuls, NPUs for low‑precision GEMMs so you pay the blend, not H100 sticker shock.
-* **Predictable UX** – Credits debit only after proof; latencies are enforced on‑chain; every run is auditable in the explorer.
+### 4. Why Dria's Architecture Enables Trading Compute for Inference
+* **Access to Advanced Models** – Run powerful 70B+ parameter models beyond the capabilities of single devices. The compiler streams model states across multiple distributed resources, enabling access to models that would otherwise be out of reach.
+* **Efficient Resource Utilization** – The scheduler intelligently allocates different model components to optimal hardware: CPUs for tokenisation, GPUs for dense MatMuls, NPUs for low‑precision operations. This means both efficient use of your contributed compute and cost-effective access to others' compute.
+* **Trustless Trading of Compute** – Credits debit only after cryptographic proof; latencies are enforced on‑chain; every model inference is auditable in the explorer. This creates the trust necessary for a global marketplace where compute is freely tradable for inference rights.
 
-### TL;DR for Builders
+### TL;DR for Multimodal Model Users
 
 ```bash
-# 3‑line quick‑start (network)
+# 3‑line quick‑start (accessing models via the network)
 export DRIA_KEY=<your wallet>
 curl -X POST https://api.dria.co/inference \
      -H "Authorization: Bearer `$DRIA`_KEY" \
-     -d '{"model":"gemma-7b","inputs":[...]}'
+     -d '{"model":"powerful-multimodal-model","inputs":[...]}'
 
-# same code, private cluster
-dnet serve --model gemma-7b --gpu 4 --cpu 2
+# same code, trading your own compute resources
+dnet serve --model powerful-multimodal-model --gpu 4 --cpu 2 --export-idle
 ```
 
-One credit balance, one API, global silicon.
+One credit balance, one API, global trading of compute for inference.

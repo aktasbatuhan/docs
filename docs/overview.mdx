@@ -1,67 +1,38 @@
 ---
 title: Dria Tokenomics
-description: How value is created and secured ensuring that everyone from enterprises to home node runners benefits when powering AI with Dria.
+description: How Dria creates and secures value by enabling frictionless access to powerful multimodal AI through trading idle compute.
 ---
 
 # Overview
 
-<Note>  
-For the math behind our verifiable‑inference proofs, see the peer‑reviewed [TOPLOC paper](https://arxiv.org/abs/2501.16007) and our [Technical Appendix](/appendix-toploc).  
-</Note>
+<div className="my-6">
+  <img src="/comptetoinference.png" alt="Dria Network: Trading Compute for Inference" className="rounded-lg border border-gray-200 dark:border-gray-800" />
+</div>
 
-Dria turns idle silicon into a single, permissionless AI super‑fabric.
-Every payment, proof, reward, and penalty is settled on Solana with the `$DRIA` token.
-Our design goals are **transparency, long‑run sustainability, and perfectly aligned incentives.**
+Dria orchestrates a global network of devices, turning idle silicon into a distributed AI super-fabric capable of running powerful multimodal models beyond the reach of individual devices. Every payment, proof, reward, and penalty is transparently settled on Solana using the `$DRIA` token.
+
+Our tokenomics are designed around a simple yet powerful principle:
+
+> **Trade idle compute directly for inference, securing immediate, frictionless access to advanced multimodal AI.**
+
+This creates a virtuous cycle where nodes provide compute, earn tokens, and reinvest those tokens directly into accessing the powerful AI models they help run. As a result, token value remains locked within the ecosystem, preventing inflationary pressures and ensuring deep retention and aligned incentives.
 
 ---
 
 ### Why the Model Works
-
-* **Verifiable Compute**: Nodes commit lightweight TOPLOC proofs; bad shards are slashed, honest ones are paid.
-* **Dual On‑Ramps & Deflation**: Enterprises pay in USD/USDC or `$DRIA`. USD payments are used to buy back `$DRIA` from the market, which is then burned. All payments result in **locked credits** spendable only on compute.
-* **Compute‑Linked Emission**: New tokens appear *only* when real FLOPS are delivered and verified.
-* **Capped & Aggressively Deflationary**: Total supply is fixed. `$DRIA` is burned when credits are purchased with USD, when on‑prem conversions occur, and during oracle calls—compressing float as usage grows.
-
----
-
-## Token Flow
-
-{/*
-```mermaid
-graph TD
-    A[USD / USDC] -- Processing Fee --> AFee[Net USD]
-    AFee -- Market Buy --> MBoughtDRIA[`$DRIA` from Market]
-    MBoughtDRIA -- Burn --> BurnDRIA[Burned `$DRIA`]
-    BurnDRIA --> E[Supply ↓]
-    AFee -- Value Equivalence --> B[Locked Credits]
-    C[`$DRIA` Token Payment] --> B
-    B -- Inference Spend --> D[Credit Consumption]
-    D -- Reward Allocation --> F[Node Runners]
-    F -- Stake & Uptime --> G[Yield]
-    F -- Verified FLOPS --> H[Emission]
-    H -- Mint New `$DRIA` --> F
-    style BurnDRIA fill:#ffcccc,stroke:#333,stroke-width:2px
-    style E fill:#ffcccc,stroke:#333,stroke-width:2px
-```
-*/}
+* **Compute-to-AGI Access**: Trade idle compute directly for inference, securing immediate, free access to multimodal, AGI-grade models beyond the capabilities of individual devices.
+* **Enforcing Ownership and Creating Deeper Retention**: Reinforcing a virtuous cycle where nodes provide compute, earn tokens, and reinvest directly to access large-scale, multimodal systems.
+* **Verifiable Compute**: Nodes commit lightweight TOPLOC proofs; faulty computations are penalized, honest ones rewarded.
+* **Dual On-Ramps & Deflation**: Enterprises pay in USD/USDC or `$DRIA`. USD payments buy back `$DRIA` from the market, which is then burned. All payments convert into locked credits usable only for inference.
+* **Compute-Linked Emission**: New tokens are minted only when verified compute is delivered, directly linking token supply growth to real economic output.
+* **Capped & Aggressively Deflationary**: Total supply is fixed. `$DRIA` tokens are burned through USD credit purchases, on-prem conversions, and oracle usage, compressing circulating supply as adoption grows.
 
 ---
 
 ## Economic Flywheel
 
-{/*
-```mermaid
-graph LR
-    A(Higher `$DRIA` price) --> B(Better node rewards)
-    B --> C(More hardware joins)
-    C --> D(Lower $/FLOP for users)
-    D --> E(More jobs & revenue)
-    E --> F(More credits locked)
-    F --> A
-```
-*/}
-
-**Self‑reinforcing loop:** usage locks revenue → burns supply → boosts token value → attracts more nodes → cuts cost → drives yet more usage.
+**Self-reinforcing loop:**  
+Inference usage locks revenue → burns supply → boosts token value → attracts more compute providers → reduces inference costs → drives further usage.
 
 ---
 
@@ -69,23 +40,22 @@ graph LR
 
 | Pillar                 | What Happens                                                                 | Why It Matters                                                                      |
 | ---------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| **Retention**          | All payments convert to non‑withdrawable credits. USD payments buy & burn `$DRIA`. | Value is locked for compute. USD inflow actively reduces `$DRIA` supply.              |
-| **Emission**           | Rewards released only after proof‑of‑compute.                                | Supply growth = real economic output, not speculation.                              |
-| **Deflation**          | `$DRIA` burned on USD credit purchases, on‑prem conversions, & oracle flows.   | Aggressively shrinks circulating supply as adoption rises from multiple channels. |
-| **Staking & Slashing** | Nodes lock collateral; faulty work slashed.                                  | Keeps the network reliable without trusted parties.                                 |
-| **Solana Settlement**  | Sub‑second finality, less than $0.001 fees.                                  | Makes on‑chain scheduling & micro‑rewards economically viable.                      |
+| **Retention**          | Payments convert to non-withdrawable credits. USD payments buy & burn `$DRIA`. | Value stays locked for inference, actively reducing circulating supply.              |
+| **Emission**           | Rewards released only after verified compute delivery.                       | Supply growth directly tied to real economic output, not speculation.               |
+| **Deflation**          | `$DRIA` burned on USD credit purchases, on-prem conversions, & oracle usage. | Aggressively shrinks circulating supply as adoption increases.                      |
+| **Staking & Slashing** | Nodes lock collateral; faulty computations penalized.                        | Ensures network reliability without trusted intermediaries.                         |
+| **Solana Settlement**  | Sub-second finality, minimal fees.                                           | Enables efficient on-chain scheduling and micro-rewards.                            |
 
 ---
 
-
 Dria's tokenomics convert **electricity + spare silicon** into a globally auditable AI utility:
 
-* **Sustainable**: Capped supply, disinflationary rewards.
-* **Aligned**: Enterprises, developers, and hardware owners all win when the network is busy.
-* **Trustless**: Every model run can be cryptographically proven.
-* **Composable**: Built natively on Solana, ready to plug into any DePIN or AI stack.
+* **Sustainable**: Capped supply, compute-linked emissions.
+* **Aligned**: Enterprises, developers, and hardware owners all benefit from network growth.
+* **Trustless**: Every inference task is cryptographically verifiable.
+* **Composable**: Built natively on Solana, ready to integrate with any DePIN or AI stack.
 
-To see Dria's tokenomics in action from an end-user perspective, check out our [User Experience](/docs/user-experience) walkthrough. 
+To see Dria's tokenomics in action from an end-user perspective, check out our [User Experience](/docs/user-experience) walkthrough.
 
 You can also dive deeper into specific aspects of our tokenomics:
 - [Token Supply & Distribution](/docs/token-supply-distribution)
@@ -94,4 +64,8 @@ You can also dive deeper into specific aspects of our tokenomics:
 - [Node Incentives & Staking](/docs/node-incentives-staking)
 - [Platform Architecture](/docs/platform-architecture)
 
-Welcome to open, verifiable AI at planetary‑scale.
+<Note>  
+For the math behind our verifiable‑inference proofs, see the peer‑reviewed [TOPLOC paper](https://arxiv.org/abs/2501.16007) and our [Technical Appendix](/appendix-toploc).  
+</Note>
+
+Welcome to open, verifiable AI at planetary-scale.
