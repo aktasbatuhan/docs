@@ -1,6 +1,6 @@
 # sim/simulation_engine.py
 
-import model_parameters as params
+from sim import model_parameters as params
 
 def calculate_monthly_unlock(total_tokens, cliff_months, linear_vesting_months, current_simulation_month, vested_to_date):
     """Calculates tokens unlocked for a single category in the current month."""
@@ -79,8 +79,7 @@ def handle_vesting(state, p):
     return state
 
 def handle_emissions(state, p):
-    """Handles the monthly release of tokens from the Node Runner Rewards Pool, 
-       balancing scheduled emissions with direct usage-driven rewards."""
+    """Handles the monthly release of tokens from the Node Runner Rewards Pool, balancing scheduled emissions with direct usage-driven rewards, and treasury tax."""
     current_year = state["current_year"]
     potential_monthly_emission_from_schedule = 0
     state['emitted_node_rewards_monthly'] = 0
@@ -89,39 +88,35 @@ def handle_emissions(state, p):
     if current_year in p.YEARLY_EMISSION_SCHEDULE_ABSOLUTE:
         annual_emission_for_current_year = p.YEARLY_EMISSION_SCHEDULE_ABSOLUTE[current_year]
         potential_monthly_emission_from_schedule = annual_emission_for_current_year / 12
-    
-    # Ensure potential emission doesn't exceed remaining pool initially
     max_emission_this_month = min(potential_monthly_emission_from_schedule, state["remaining_node_rewards_pool_tokens"])
 
-    # Calculate Network Utilization
     if state["current_network_capacity_gflops_monthly"] > 0:
         network_utilization = state["current_compute_demand_gflops_monthly"] / state["current_network_capacity_gflops_monthly"]
-        state['network_utilization_rate'] = min(network_utilization, 1.0) # Cap at 100%
+        state['network_utilization_rate'] = min(network_utilization, 1.0)
     else:
         state['network_utilization_rate'] = 0
 
-    # 1. Scheduled Portion (scaled by utilization)
     scheduled_budget_share = max_emission_this_month * p.SCHEDULE_DRIVEN_EMISSION_FACTOR
     emitted_from_schedule = scheduled_budget_share * state['network_utilization_rate']
-
-    # 2. Usage-Driven Portion (direct GFLOP payment, capped by its budget share)
     usage_driven_budget_share = max_emission_this_month * p.USAGE_DRIVEN_EMISSION_FACTOR
     calculated_usage_driven_rewards = state["current_compute_demand_gflops_monthly"] * p.EMISSION_RATE_PER_GFLOP_DRIA
     emitted_from_usage = min(calculated_usage_driven_rewards, usage_driven_budget_share)
-    
-    # Total actual tokens to emit
     actual_tokens_to_emit_for_compute = emitted_from_schedule + emitted_from_usage
-    
-    # Final check against overall remaining pool and monthly max (should be redundant if logic is correct but safe)
     final_emission = min(actual_tokens_to_emit_for_compute, state["remaining_node_rewards_pool_tokens"])
-    final_emission = min(final_emission, max_emission_this_month) # Cannot emit more than the total monthly budget from schedule
+    final_emission = min(final_emission, max_emission_this_month)
+
+    # Treasury tax
+    treasury_cut = final_emission * p.TREASURY_TAX_RATE_FROM_EMISSIONS
+    emission_to_circulation = final_emission - treasury_cut
 
     if final_emission > 0:
         state["remaining_node_rewards_pool_tokens"] -= final_emission
-        state["circulating_supply"] += final_emission
-        state['emitted_node_rewards_monthly'] = final_emission
-        # print(f"Node Rewards: PotentialMonthSched={potential_monthly_emission_from_schedule:.2f}, MaxMonth={max_emission_this_month:.2f}, Util={state['network_utilization_rate']:.2%}, FromSched={emitted_from_schedule:.2f}, FromUsage={emitted_from_usage:.2f}, FinalEmit={final_emission:.2f}")
-
+        state["circulating_supply"] += emission_to_circulation
+        state['emitted_node_rewards_monthly'] = emission_to_circulation
+        # Add to treasury
+        if 'treasury_balance' not in state:
+            state['treasury_balance'] = 0
+        state['treasury_balance'] += treasury_cut
     return state
 
 def handle_ecosystem_fund_release(state, p, month_index):
@@ -186,34 +181,26 @@ def handle_staking(state, p):
     # APY Moving Average Calculation
     state['apy_history'].append(state.get("actual_node_apy_monthly_percentage", 0))
     if len(state['apy_history']) > p.APY_MOVING_AVERAGE_MONTHS:
-        state['apy_history'].pop(0) # Keep list to size of moving average window
-    
-    average_apy_for_decision = 0
-    if state['apy_history']:
-        average_apy_for_decision = sum(state['apy_history']) / len(state['apy_history'])
-    state['average_apy_for_decision'] = average_apy_for_decision # Store for logging/history
+        state['apy_history'].pop(0)
+    average_apy_for_decision = sum(state['apy_history']) / len(state['apy_history']) if state['apy_history'] else 0
+    state['average_apy_for_decision'] = average_apy_for_decision
 
     # Calculate node growth based on APY difference (using moving average APY)
-    if previous_node_count > 0: # Avoid division by zero or extreme changes if starting from 0 nodes and APY is high
+    if previous_node_count > 0:
         apy_difference_percentage_points = average_apy_for_decision - p.TARGET_NODE_APY_PERCENTAGE
-        # Convert APY difference (e.g. 5 for 5%) to a decimal factor for sensitivity (e.g. 0.05)
-        # Sensitivity is how much 1 percentage point of APY diff influences growth rate (e.g. 0.002 means 1% APY diff -> 0.2% growth)
-        node_growth_factor_monthly = (apy_difference_percentage_points) * p.NODE_ADOPTION_CHURN_SENSITIVITY 
-        
-        # Apply growth/churn to node count
-        # Ensure node count doesn't go below a certain minimum if desired (e.g. 1, or 0 if allowed)
-        # Add a cap to growth/churn rate to prevent extreme swings, e.g. +/- 20% per month
-        max_monthly_change = 0.20 
+        node_growth_factor_monthly = apy_difference_percentage_points * p.NODE_ADOPTION_CHURN_SENSITIVITY
+        max_monthly_change = 0.20
         node_growth_factor_monthly = max(min(node_growth_factor_monthly, max_monthly_change), -max_monthly_change)
-        
-        state["current_node_count"] = previous_node_count * (1 + node_growth_factor_monthly)
-        state["current_node_count"] = max(state["current_node_count"], 0) # Ensure node count doesn't go negative
-    else: # If starting with 0 nodes, a fixed small initial growth if APY is positive, or stays 0
+        target_node_count = previous_node_count * (1 + node_growth_factor_monthly)
+        # Node join/leave lag: move fraction of way toward target
+        lag = max(p.NODE_COUNT_ADJUSTMENT_LAG_MONTHS, 1)
+        new_node_count = previous_node_count + (target_node_count - previous_node_count) / lag
+        state["current_node_count"] = max(int(round(new_node_count)), 0)
+    else:
         if average_apy_for_decision > p.TARGET_NODE_APY_PERCENTAGE:
-            state["current_node_count"] = 1 # Start with 1 node if attractive
+            state["current_node_count"] = 1
         else:
             state["current_node_count"] = 0
-            
     # Update total DRIA staked based on new node count
     current_total_dria_staked = state["current_node_count"] * p.MINIMUM_NODE_STAKE_DRIA
     state["total_dria_staked"] = current_total_dria_staked

@@ -108,57 +108,60 @@ def handle_emissions_proposal(state, p):
     return state, reward_pool_for_distribution_potential, treasury_cut_emissions, emitted_this_timestep
 
 def distribute_epoch_rewards_proposal(state, p, monthly_reward_pool_potential):
-    """Distributes the monthly_reward_pool_potential to contributors based on Uptime and FLOPs, scaled by demand."""
-    total_performance_score = 0
-    performance_scores = []
+    """Distributes the monthly_reward_pool_potential to contributors and validators based on Uptime, FLOPs, and stake, scaled by demand."""
+    total_performance_score_contributors = 0
+    performance_scores_contributors = []
     total_simulated_utilized_gflops_this_month = 0
+    actual_distributed_to_contributors = 0
+    actual_distributed_to_validators = 0 # Initialize
 
+    # --- Contributor Rewards ---
     for i in range(state["current_contributor_nodes"]):
         uptime_i = max(0, min(1, random.gauss(p.PROPOSAL_AVG_UPTIME_PER_CONTRIBUTOR, 0.05)))
-        # Simulate GFLOPs provided by this node for the month
-        # This can be thought of as "utilized" GFLOPs based on current (implicit) demand
         gflops_i_monthly = max(0, random.gauss(p.PROPOSAL_AVG_GFLOPS_PER_CONTRIBUTOR_MONTHLY, 
                                    p.PROPOSAL_AVG_GFLOPS_PER_CONTRIBUTOR_MONTHLY * 0.1))
         total_simulated_utilized_gflops_this_month += gflops_i_monthly
-
-        # Performance score calculation (as before)
         score_i = uptime_i * math.log(1 + gflops_i_monthly) if gflops_i_monthly > 0 else uptime_i * 0.001 
-        performance_scores.append(score_i)
-        total_performance_score += score_i
+        performance_scores_contributors.append(score_i)
+        total_performance_score_contributors += score_i
 
-    # Calculate demand scaling factor
-    # Total available GFLOPs = num_nodes * avg_gflops_potential_per_node
-    # We use PROPOSAL_AVG_GFLOPS_PER_CONTRIBUTOR_MONTHLY as the potential per node.
     total_available_gflops = state["current_contributor_nodes"] * p.PROPOSAL_AVG_GFLOPS_PER_CONTRIBUTOR_MONTHLY
-    state["total_available_gflops_monthly"] = total_available_gflops # Log this
-    state["total_utilized_gflops_monthly"] = total_simulated_utilized_gflops_this_month # Log this
+    state["total_available_gflops_monthly"] = total_available_gflops
+    state["total_utilized_gflops_monthly"] = total_simulated_utilized_gflops_this_month
 
     demand_supply_ratio = 0
     if total_available_gflops > 0:
         demand_supply_ratio = total_simulated_utilized_gflops_this_month / total_available_gflops
-    state["demand_supply_ratio_monthly"] = demand_supply_ratio # Log this
+    state["demand_supply_ratio_monthly"] = demand_supply_ratio
 
     reward_scaling_factor = 1.0
     if p.TARGET_UTILIZATION_FOR_FULL_REWARDS > 0:
         reward_scaling_factor = min(1.0, demand_supply_ratio / p.TARGET_UTILIZATION_FOR_FULL_REWARDS)
-    else: # If target utilization is 0 or less, assume full rewards (or handle as error/edge case)
-        reward_scaling_factor = 1.0 
-    state["reward_scaling_factor_monthly"] = reward_scaling_factor # Log this
+    state["reward_scaling_factor_monthly"] = reward_scaling_factor
 
-    # Scale the potential reward pool by the demand factor
     rewards_to_distribute_after_scaling = monthly_reward_pool_potential * reward_scaling_factor
-    state["rewards_to_distribute_after_scaling_monthly"] = rewards_to_distribute_after_scaling # Log this
+    state["rewards_to_distribute_after_scaling_monthly"] = rewards_to_distribute_after_scaling
 
-    actual_distributed_to_contributors = 0
-    if total_performance_score > 0 and rewards_to_distribute_after_scaling > 0:
-        for score_i in performance_scores:
-            node_reward = (score_i / total_performance_score) * rewards_to_distribute_after_scaling
+    # Split rewards between contributors and validators (e.g., 80/20 or based on stake weight)
+    # For now, let's assume all of this scaled pool goes to contributors, and validators get rewards from fees/fixed APY.
+    # This can be adjusted based on proposal.md details if validators should get a share of emissions directly.
+    contributor_share_of_scaled_rewards = rewards_to_distribute_after_scaling 
+
+    if total_performance_score_contributors > 0 and contributor_share_of_scaled_rewards > 0:
+        for score_i in performance_scores_contributors:
+            node_reward = (score_i / total_performance_score_contributors) * contributor_share_of_scaled_rewards
             actual_distributed_to_contributors += node_reward
     
     state["total_distributed_to_contributors_monthly"] = actual_distributed_to_contributors
-    # This amount will be added to circulating supply in the main loop.
+    
+    # --- Validator Rewards (from emissions - placeholder, if any) ---
+    # If validators also get a share of this `monthly_reward_pool_potential`:
+    # validator_share_of_scaled_rewards = rewards_to_distribute_after_scaling * 0.1 # Example 10%
+    # actual_distributed_to_validators = validator_share_of_scaled_rewards # Distribute based on stake or fixed amount
+    # For now, validator_staking_rewards_monthly_proposal handles a fixed APY which is simpler.
+    # Let's ensure actual_distributed_to_validators is initialized and returned. It will be updated by handle_staking_and_slashing_proposal.
 
-    return state, actual_distributed_to_contributors
+    return actual_distributed_to_contributors, actual_distributed_to_validators # Return the numbers, not state
 
 def handle_staking_and_slashing_proposal(state, p):
     """Handles staking by validators and contributors, and potential slashing."""
@@ -224,75 +227,143 @@ def handle_staking_and_slashing_proposal(state, p):
     
     return state
 
+def handle_treasury_outflows(state, p):
+    """Simulate ecosystem funding/governance by spending a portion of the treasury each month."""
+    if 'treasury_balance_proposal' in state and state['treasury_balance_proposal'] > 0:
+        outflow = state['treasury_balance_proposal'] * p.TREASURY_OUTFLOW_RATE_MONTHLY
+        state['treasury_balance_proposal'] -= outflow
+        state['circulating_supply_proposal'] += outflow  # Grants, etc. enter circulation
+        state['treasury_outflow_monthly_proposal'] = outflow
+    else:
+        state['treasury_outflow_monthly_proposal'] = 0
+    return state
+
+def update_validator_contributor_churn(state, p):
+    """Update validator and contributor node counts separately based on profitability/APY."""
+    # Contributors (existing logic)
+    current_contributors = state["current_contributor_nodes"]
+    if not isinstance(current_contributors, int):
+        print(f"DEBUG: current_contributor_nodes is not int! Got {type(current_contributors)}: {current_contributors}")
+        current_contributors = 100
+        state["current_contributor_nodes"] = current_contributors
+    total_monthly_rewards = state.get("total_distributed_to_contributors_monthly", 0)
+    if current_contributors > 0:
+        avg_rewards_per_contributor_dria = total_monthly_rewards / current_contributors
+        avg_rewards_per_contributor_usd = avg_rewards_per_contributor_dria * state["simulated_dria_price_usd_proposal"]
+        monthly_profit_usd = avg_rewards_per_contributor_usd - p.AVG_NODE_OPERATING_COST_USD_MONTHLY
+        if monthly_profit_usd > p.MIN_MONTHLY_PROFIT_USD_FOR_GROWTH:
+            profit_ratio = monthly_profit_usd / p.MIN_MONTHLY_PROFIT_USD_FOR_GROWTH
+            growth_rate = min(p.NODE_GROWTH_SENSITIVITY * profit_ratio, p.MAX_MONTHLY_NODE_GROWTH_RATE)
+        else:
+            loss_ratio = monthly_profit_usd / p.MIN_MONTHLY_PROFIT_USD_FOR_GROWTH
+            growth_rate = max(p.NODE_GROWTH_SENSITIVITY * loss_ratio, -p.MAX_MONTHLY_NODE_DECLINE_RATE)
+        target_contributors = current_contributors * (1 + growth_rate)
+        adjustment_factor = 1 / p.NODE_COUNT_ADJUSTMENT_LAG_MONTHS
+        new_contributor_count = current_contributors + (target_contributors - current_contributors) * adjustment_factor
+        # HARDEN: Ensure int, never dict
+        try:
+            new_contributor_count = int(new_contributor_count)
+        except Exception as e:
+            print(f"DEBUG: Failed to cast new_contributor_count to int: {e}, value: {new_contributor_count}")
+            new_contributor_count = 100
+        if not isinstance(new_contributor_count, int):
+            print(f"DEBUG: new_contributor_count is not int! Got {type(new_contributor_count)}: {new_contributor_count}")
+            new_contributor_count = 100
+        new_contributor_count = max(new_contributor_count, 100)
+        state["current_contributor_nodes"] = int(new_contributor_count)
+        state["monthly_profit_per_contributor_usd"] = monthly_profit_usd
+        state["contributor_growth_rate"] = growth_rate
+    # Validators (new logic)
+    current_validators = state["current_validator_nodes"]
+    if not isinstance(current_validators, int):
+        print(f"DEBUG: current_validator_nodes is not int! Got {type(current_validators)}: {current_validators}")
+        current_validators = 1
+        state["current_validator_nodes"] = current_validators
+    total_validator_rewards = state.get("validator_staking_rewards_monthly_proposal", 0) + state.get("fee_rewards_for_validators_monthly_proposal", 0)
+    if current_validators > 0:
+        avg_rewards_per_validator_dria = total_validator_rewards / current_validators
+        avg_rewards_per_validator_usd = avg_rewards_per_validator_dria * state["simulated_dria_price_usd_proposal"]
+        monthly_profit_usd = avg_rewards_per_validator_usd - p.VALIDATOR_OPERATING_COST_USD_MONTHLY
+        if monthly_profit_usd > p.VALIDATOR_MIN_MONTHLY_PROFIT_USD_FOR_GROWTH:
+            profit_ratio = monthly_profit_usd / p.VALIDATOR_MIN_MONTHLY_PROFIT_USD_FOR_GROWTH
+            growth_rate = min(p.VALIDATOR_GROWTH_SENSITIVITY * profit_ratio, p.VALIDATOR_MAX_MONTHLY_GROWTH_RATE)
+        else:
+            loss_ratio = monthly_profit_usd / p.VALIDATOR_MIN_MONTHLY_PROFIT_USD_FOR_GROWTH
+            growth_rate = max(p.VALIDATOR_GROWTH_SENSITIVITY * loss_ratio, -p.VALIDATOR_MAX_MONTHLY_DECLINE_RATE)
+        target_validators = current_validators * (1 + growth_rate)
+        adjustment_factor = 1 / p.VALIDATOR_COUNT_ADJUSTMENT_LAG_MONTHS
+        new_validator_count = current_validators + (target_validators - current_validators) * adjustment_factor
+        # HARDEN: Ensure int, never dict
+        try:
+            new_validator_count = int(new_validator_count)
+        except Exception as e:
+            print(f"DEBUG: Failed to cast new_validator_count to int: {e}, value: {new_validator_count}")
+            new_validator_count = 1
+        if not isinstance(new_validator_count, int):
+            print(f"DEBUG: new_validator_count is not int! Got {type(new_validator_count)}: {new_validator_count}")
+            new_validator_count = 1
+        new_validator_count = max(new_validator_count, 1)
+        state["current_validator_nodes"] = int(new_validator_count)
+        state["monthly_profit_per_validator_usd"] = monthly_profit_usd
+        state["validator_growth_rate"] = growth_rate
+    return state
+
 def handle_service_fees_proposal(state, p):
-    """Handles service fees paid by users, their distribution, and potential burns."""
+    """Handles service fees paid by users, their distribution, and potential burns, with validator fee share."""
     total_service_value_usd_this_month = state["current_usd_demand_per_month_proposal"]
     total_service_value_dria_this_month = state["current_dria_demand_per_month_proposal"]
-
-    # Convert USD demand to DRIA equivalent for fee calculation
     if state['simulated_dria_price_usd_proposal'] > 0:
         service_value_from_usd_in_dria = total_service_value_usd_this_month / state['simulated_dria_price_usd_proposal']
     else:
         service_value_from_usd_in_dria = 0
-        
     total_service_value_in_dria_equivalent = service_value_from_usd_in_dria + total_service_value_dria_this_month
-    
-    # Calculate total fees in DRIA
     total_fees_generated_dria = total_service_value_in_dria_equivalent * p.PROPOSAL_SERVICE_FEE_PERCENT_OF_VALUE
-    
-    # Add average transaction fees (simplified: based on number of nodes as proxy for activity)
-    num_transactions_proxy = (state["current_contributor_nodes"] + state["current_validator_nodes"]) * 10 # Example: 10 tx per node
+    num_transactions_proxy = (state["current_contributor_nodes"] + state["current_validator_nodes"]) * 10
     total_tx_fees_dria = num_transactions_proxy * p.PROPOSAL_AVG_TX_FEE_DRIA
     total_fees_generated_dria += total_tx_fees_dria
-    
     state["total_fees_generated_dria_monthly"] = total_fees_generated_dria
-
     # Distribute fees
-    # 1. Treasury Cut from Fees
     treasury_cut_fees = total_fees_generated_dria * p.PROPOSAL_TREASURY_TAX_RATE_FROM_FEES
+    validator_cut_fees = total_fees_generated_dria * p.VALIDATOR_FEE_SHARE
+    fees_after_treasury_and_validators = total_fees_generated_dria - treasury_cut_fees - validator_cut_fees
+    fees_to_burn = fees_after_treasury_and_validators * 0.5
+    fees_for_rewards = fees_after_treasury_and_validators - fees_to_burn
     state["treasury_balance_proposal"] += treasury_cut_fees
-    
-    fees_after_treasury = total_fees_generated_dria - treasury_cut_fees
-    
-    # Fees can be distributed to contributors/validators, or burned.
-    # For now, let's assume a portion is burned and rest goes to contributors/validators (similar to emission rewards)
-    fees_to_burn = fees_after_treasury * 0.5 # Example: 50% of remaining fees burned
-    fees_for_rewards = fees_after_treasury - fees_to_burn
-    
-    state["circulating_supply_proposal"] -= fees_to_burn # Burning reduces circ supply
+    state["fee_rewards_for_validators_monthly_proposal"] = validator_cut_fees
+    state["circulating_supply_proposal"] -= fees_to_burn
     state["total_tokens_burned_proposal"] += fees_to_burn
     state["burned_from_fees_monthly_proposal"] = fees_to_burn
-    
-    # Add fees_for_rewards to the pool to be distributed, similar to monthly_reward_pool
-    # This could be added to the next month's reward pool or distributed immediately.
-    # For simplicity, let's assume it's available for immediate distribution via the same mechanism as monthly rewards.
-    # This part needs careful design: are fees distributed by performance score too? Or to stakers?
-    # Let's add it to a general pool that could be paid to stakers (validators primarily).
-    state["fee_rewards_for_validators_monthly_proposal"] = fees_for_rewards
-    state["circulating_supply_proposal"] += fees_for_rewards # These are re-circulated
-                                                            # if not already accounted for (e.g. paid from user to network)
-                                                            # This needs care: fees are paid by users, so they are already part of supply.
-                                                            # The burning reduces supply. The part for rewards is a transfer.
-                                                            # If users pay in DRIA, that DRIA moves. If USD, new DRIA might be involved if not burned.
-
-    # If USD payments for services also trigger a buy-and-burn (optional feature)
+    state["circulating_supply_proposal"] += fees_for_rewards
+    # USD buy-and-burn
     if p.USD_TO_DRIA_BURN_ACTIVE_PROPOSAL and state['simulated_dria_price_usd_proposal'] > 0:
         usd_value_to_buy_burn = state["current_usd_demand_per_month_proposal"] * (1 - p.USD_TO_CREDIT_FX_FEE_PROPOSAL)
         dria_bought_for_burn = usd_value_to_buy_burn / state['simulated_dria_price_usd_proposal']
-        
-        actual_burn_from_usd = min(dria_bought_for_burn, state["circulating_supply_proposal"] - state.get("burned_from_fees_monthly_proposal",0) - state.get("slashed_dria_monthly_proposal",0) ) # Avoid burning more than available after other burns
+        actual_burn_from_usd = min(dria_bought_for_burn, state["circulating_supply_proposal"] - state.get("burned_from_fees_monthly_proposal",0) - state.get("slashed_dria_monthly_proposal",0) )
         state["circulating_supply_proposal"] -= actual_burn_from_usd
         state["total_tokens_burned_proposal"] += actual_burn_from_usd
         state["burned_from_usd_payments_monthly_proposal"] = actual_burn_from_usd
-        
     return state
 
 def update_demand_drivers_proposal(state, p):
+    """Update demand drivers with user churn and demand shocks."""
+    # Normal growth
     state["current_usd_demand_per_month_proposal"] *= (1 + p.USD_DEMAND_GROWTH_RATE_MONTHLY_PROPOSAL)
     state["current_dria_demand_per_month_proposal"] *= (1 + p.DRIA_DEMAND_GROWTH_RATE_MONTHLY_PROPOSAL)
-    # Add growth for node counts if desired (or make it dynamic based on APY)
-    # state["current_contributor_nodes"] *= (1 + 0.005) # Example fixed growth
-    # state["current_validator_nodes"] *= (1 + 0.002)   # Example fixed growth
+    # User churn event
+    if random.random() < p.USER_CHURN_PROBABILITY:
+        state["current_usd_demand_per_month_proposal"] *= (1 - p.USER_CHURN_MAGNITUDE)
+        state["current_dria_demand_per_month_proposal"] *= (1 - p.USER_CHURN_MAGNITUDE)
+        state["user_churn_event"] = True
+    else:
+        state["user_churn_event"] = False
+    # Demand shock event
+    if random.random() < p.DEMAND_SHOCK_PROBABILITY:
+        shock = 1 + (p.DEMAND_SHOCK_MAGNITUDE if random.random() < 0.5 else -p.DEMAND_SHOCK_MAGNITUDE)
+        state["current_usd_demand_per_month_proposal"] *= shock
+        state["current_dria_demand_per_month_proposal"] *= shock
+        state["demand_shock_event"] = shock
+    else:
+        state["demand_shock_event"] = 0
     return state
     
 def update_simulated_price_proposal(state, p):
@@ -378,67 +449,40 @@ def calculate_node_profitability_and_growth(state, p):
     
     return state
 
-def run_simulation_proposal(initial_state_proposal, p, num_years):
-    """Runs the proposal-based simulation for the specified number of years."""
+def run_simulation_proposal(initial_state, p, num_years):
+    state = initial_state.copy()
     history = []
-    state = initial_state_proposal.copy()
-
-    # Initial staking setup
-    initial_total_stake = (state["current_validator_nodes"] * p.PROPOSAL_MIN_VALIDATOR_STAKE_DRIA) + \
-                         (state["current_contributor_nodes"] * p.PROPOSAL_MIN_CONTRIBUTOR_STAKE_DRIA)
-    state["total_dria_staked_proposal"] = initial_total_stake
-    state["circulating_supply_proposal"] -= initial_total_stake
-    state["circulating_supply_proposal"] = max(0, state["circulating_supply_proposal"])
-
     for year in range(1, num_years + 1):
         state["current_year"] = year
-        
         for month in range(1, 13):
             state["current_month"] = month
-            
             # --- Monthly Updates ---
             state = handle_vesting_proposal(state, p)
-            
-            # Handle emissions and get reward pool
-            # emitted_this_timestep is the raw amount (base+buffer) potentially taken from the emission pool this month
             state, monthly_reward_pool_potential, treasury_cut_emissions, emitted_this_timestep = handle_emissions_proposal(state, p)
-            
-            # Distribute rewards to nodes, scaled by demand
-            # actual_distributed_to_contributors is the amount that actually goes to nodes
-            state, actual_distributed_to_contributors = distribute_epoch_rewards_proposal(state, p, monthly_reward_pool_potential)
+            actual_distributed_to_contributors, actual_distributed_to_validators = distribute_epoch_rewards_proposal(state, p, monthly_reward_pool_potential)
+            state["total_distributed_to_contributors_monthly"] = actual_distributed_to_contributors
+            state["validator_staking_rewards_monthly_proposal"] = actual_distributed_to_validators
 
-            # Update treasury and circulating supply based on actual distributions
-            state["treasury_balance_proposal"] += treasury_cut_emissions
+            # Update treasury and circulating supply based on actual distributions from EMISSIONS
+            state["treasury_balance_proposal"] += treasury_cut_emissions 
             state["circulating_supply_proposal"] += actual_distributed_to_contributors + treasury_cut_emissions
             
-            # Update the remaining emission pool by what was actually paid out (to nodes + treasury)
-            # The initial `emitted_this_timestep` was a potential draw, including buffer and before demand scaling.
-            # The actual reduction from the pool is the sum of what went to contributors and what went to treasury.
+            # Update the remaining emission pool
             amount_deducted_from_pool = actual_distributed_to_contributors + treasury_cut_emissions
             state["remaining_emission_pool_proposal"] -= amount_deducted_from_pool
             
             # Log the actual emissions that were distributed to nodes for this month
             state["emitted_rewards_monthly_proposal"] = actual_distributed_to_contributors
+            
             # Log the portion of emissions that went to treasury
             state["emissions_to_treasury_monthly_proposal"] = treasury_cut_emissions
 
-            state = handle_staking_and_slashing_proposal(state, p)
-            
-            # Process service fees
             state = handle_service_fees_proposal(state, p)
-            
-            # Update demand drivers
+            state = handle_treasury_outflows(state, p)
+            state = update_validator_contributor_churn(state, p)
             state = update_demand_drivers_proposal(state, p)
-            
-            # Update simulated price
-            state = update_simulated_price_proposal(state, p)
-            
-            # Calculate profitability and adjust node counts
-            state = calculate_node_profitability_and_growth(state, p)
-            
-            # Record state for this timestep
+            # ... rest of the loop ...
             history.append(state.copy())
-            
     return history
 
 # Example of how to initialize and run (would typically be in main_proposal.py)

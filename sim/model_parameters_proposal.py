@@ -119,4 +119,25 @@ print("Proposal model parameters loaded.")
 # ON_PREM_CONVERSION_BURN_RATE, ORACLE_USAGE_BURN_RATE (replaced by simpler fee model, or can be added back if desired)
 # BASE_STAKING_YIELD_RATE_ANNUAL (staking yield in proposal might come from emission share or fees, not a fixed base rate)
 # EMISSION_RATE_PER_GFLOP_DRIA (replaced by composite score P_i)
-# ADAPTIVE_YIELD_PRICE_THRESHOLD_LOW etc. (adaptive yield logic can be ported if desired for validator rewards) 
+# ADAPTIVE_YIELD_PRICE_THRESHOLD_LOW etc. (adaptive yield logic can be ported if desired for validator rewards)
+
+# --- Treasury Outflows (Ecosystem Funding) ---
+TREASURY_OUTFLOW_RATE_MONTHLY = 0.02  # 2% of treasury spent per month on grants/governance
+
+# --- Validator/Contributor Churn Parameters ---
+VALIDATOR_GROWTH_SENSITIVITY = 0.05  # How quickly validators join/leave based on APY
+VALIDATOR_MIN_MONTHLY_PROFIT_USD_FOR_GROWTH = 200  # Minimum monthly profit in USD to attract new validators
+VALIDATOR_MAX_MONTHLY_GROWTH_RATE = 0.1  # Max 10% monthly growth
+VALIDATOR_MAX_MONTHLY_DECLINE_RATE = 0.05  # Max 5% monthly decline
+VALIDATOR_COUNT_ADJUSTMENT_LAG_MONTHS = 6  # Validators are slower to join/leave
+VALIDATOR_OPERATING_COST_USD_MONTHLY = 100  # Higher cost for validators
+
+# --- Fee Distribution ---
+VALIDATOR_FEE_SHARE = 0.3  # 30% of service/tx fees go to validators
+# (Treasury and burn shares remain as previously set)
+
+# --- User Churn and Demand Shocks ---
+USER_CHURN_PROBABILITY = 0.05  # 5% chance per month of user churn event
+USER_CHURN_MAGNITUDE = 0.1     # 10% drop in demand if churn event occurs
+DEMAND_SHOCK_PROBABILITY = 0.03 # 3% chance per month of demand shock
+DEMAND_SHOCK_MAGNITUDE = 0.2    # 20% up or down (random) if shock occurs 

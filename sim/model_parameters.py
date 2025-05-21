@@ -16,22 +16,22 @@ CURRENT_INVESTMENT_ROUND_PERCENT = 0.10   # 10%
 TEAM_ADVISORS_PERCENT = 0.20              # 20% (Combined Team & Advisors)
 
 # --- Calculated Total Tokens per Category ---
-NODE_RUNNER_REWARDS_POOL_TOTAL = MAX_SUPPLY_DRIA * NODE_RUNNER_REWARDS_POOL_PERCENT
-ECOSYSTEM_FUND_TOKENS_TOTAL = MAX_SUPPLY_DRIA * ECOSYSTEM_FUND_PERCENT
+NODE_RUNNER_REWARDS_POOL_TOTAL = int(MAX_SUPPLY_DRIA * NODE_RUNNER_REWARDS_POOL_PERCENT)
+ECOSYSTEM_FUND_TOKENS_TOTAL = int(MAX_SUPPLY_DRIA * ECOSYSTEM_FUND_PERCENT)
 # Assuming Team & Advisors are combined as per docs, let's split them for vesting if needed, or keep combined.
 # For simplicity, let's assume the TEAM_ADVISORS_PERCENT is for a combined "Team & Advisors" vesting schedule.
 # If separate, these would need to be broken down.
 # Let's assume: Team 15%, Advisors 5% of the 20% for vesting details, or use a single vesting schedule.
 # Sticking to the combined TEAM_ADVISORS_PERCENT from docs for now.
-TEAM_ADVISORS_TOKENS_TOTAL = MAX_SUPPLY_DRIA * TEAM_ADVISORS_PERCENT
+TEAM_ADVISORS_TOKENS_TOTAL = int(MAX_SUPPLY_DRIA * TEAM_ADVISORS_PERCENT)
 # Individual breakdown for vesting if needed by simulation_engine.py (which it does)
 TEAM_PERCENT = 0.15 # Example if Team is 15% of total
 ADVISORS_PERCENT = 0.05 # Example if Advisors is 5% of total
-TEAM_TOKENS_TOTAL = MAX_SUPPLY_DRIA * TEAM_PERCENT
-ADVISORS_TOKENS_TOTAL = MAX_SUPPLY_DRIA * ADVISORS_PERCENT
+TEAM_TOKENS_TOTAL = int(MAX_SUPPLY_DRIA * TEAM_PERCENT)
+ADVISORS_TOKENS_TOTAL = int(MAX_SUPPLY_DRIA * ADVISORS_PERCENT)
 
-PRIVATE_ROUND_INVESTORS_TOKENS_TOTAL = 160_000_000 # Placeholder
-CURRENT_INVESTMENT_ROUND_TOKENS_TOTAL = 100_000_000 # Placeholder
+PRIVATE_ROUND_INVESTORS_TOKENS_TOTAL = int(MAX_SUPPLY_DRIA * PRIVATE_ROUND_INVESTORS_PERCENT)
+CURRENT_INVESTMENT_ROUND_TOKENS_TOTAL = int(MAX_SUPPLY_DRIA * CURRENT_INVESTMENT_ROUND_PERCENT)
 
 
 # --- Vesting Schedules (in months) ---
@@ -111,9 +111,9 @@ MIN_SIMULATED_DRIA_PRICE_USD = 0.001    # Placeholder
 
 # --- Additional Parameters Required by simulation_engine.py ---
 # Vesting & Allocations
-PRIVATE_ROUND_INVESTORS_TOKENS_TOTAL = 160_000_000 # Placeholder
+PRIVATE_ROUND_INVESTORS_TOKENS_TOTAL = int(MAX_SUPPLY_DRIA * PRIVATE_ROUND_INVESTORS_PERCENT)
 PRIVATE_ROUND_VESTING = {"cliff": 6, "linear_months": 24} # Placeholder
-CURRENT_INVESTMENT_ROUND_TOKENS_TOTAL = 100_000_000 # Placeholder
+CURRENT_INVESTMENT_ROUND_TOKENS_TOTAL = int(MAX_SUPPLY_DRIA * CURRENT_INVESTMENT_ROUND_PERCENT)
 CURRENT_ROUND_VESTING = {"cliff": 6, "linear_months": 30} # Placeholder
 
 # Staking & Node Economics
@@ -139,5 +139,11 @@ MAX_ADAPTIVE_BASE_YIELD_ANNUAL = 0.10 # Placeholder
 ADAPTIVE_YIELD_PRICE_THRESHOLD_HIGH = 0.5 # Placeholder
 BASE_YIELD_REDUCTION_FACTOR = 0.8 # Placeholder
 MIN_ADAPTIVE_BASE_YIELD_ANNUAL = 0.01 # Placeholder
+
+# --- Node Join/Leave Lag ---
+NODE_COUNT_ADJUSTMENT_LAG_MONTHS = 3 # Node count moves 1/3 of the way toward target per month
+
+# --- Treasury ---
+TREASURY_TAX_RATE_FROM_EMISSIONS = 0.05 # 5% of emissions go to treasury
 
 print("Original model parameters loaded.")

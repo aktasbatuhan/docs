@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dria Tokenomics Simulation Report</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; background-color: #f4f4f4; color: #333; }
+            h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; }
+            h2 { color: #2980b9; border-bottom: 2px solid #3498db; padding-bottom: 5px; margin-top: 30px;}
+            h3 { color: #16a085; margin-top: 20px;}
+            table { border-collapse: collapse; width: 100%; margin-bottom: 20px; font-size: 0.9em; box-shadow: 0 2px 3px rgba(0,0,0,0.1); background-color: white; }
+            th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+            th { background-color: #3498db; color: white; }
+            tr:nth-child(even) { background-color: #ecf0f1; }
+            .main-container { max-width: 1200px; margin: auto; background-color: white; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+            .section { margin-bottom: 30px; padding: 15px; border-radius: 5px;}
+            .param-section-container { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; }
+            .param-section { flex-basis: 48%; box-sizing: border-box; background-color: #fff; padding:15px; border-radius:5px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); margin-bottom:15px;}
+            .plot-section img { max-width: 100%; height: auto; display: block; margin-top: 10px; border: 1px solid #ddd; border-radius: 4px; }
+            ul { margin-left: 20px; }
+            p { text-align: justify; }
+        </style>
+    </head>
+    <body>
+        <div class="main-container">
+            <h1>Dria Tokenomics Simulation Comparison Report</h1>
+    <div class='section'><h2>Core Tokenomic Mechanisms</h2><div><h3>Original Dria Model (Based on `docs`)</h3>
+    <p>This model simulates Dria's tokenomics as described in the documentation. Key features include:</p>
+    <ul>
+        <li><strong>Core Principle:</strong> "Trade idle compute directly for inference."</li>
+        <li><strong>Token:</strong> $DRIA on Solana.</li>
+        <li><strong>Supply:</strong> Capped at 1 billion $DRIA.</li>
+        <li><strong>Emission:</strong>
+            <ul>
+                <li>Linked to verifiable compute (FLOPS) delivered for model inference.</li>
+                <li>Distributed from a "Node Runner Rewards Pool" (35% of total supply) over 10 years with a disinflationary schedule.</li>
+                <li>New tokens are minted *only* when verified compute is delivered (simulated via utilization of scheduled emissions and direct GFLOP rewards).</li>
+            </ul>
+        </li>
+        <li><strong>Deflationary Mechanisms:</strong>
+            <ul>
+                <li>USD/Fiat Payments: USD buys $DRIA from the market, which is then burned. Users receive locked credits.</li>
+                <li>On-Prem Conversions: $DRIA earned from compute converted to credits may involve a partial burn.</li>
+                <li>Oracle Usage: Portion of $DRIA paid for oracle services is burned.</li>
+            </ul>
+        </li>
+        <li><strong>Staking:</strong>
+            <ul>
+                <li>Node runners stake $DRIA. Earn yield based on active hours/reliability (simulated with target APY driving node growth/churn).</li>
+                <li>Slashing for misbehavior (not explicitly detailed in current sim engine beyond stake risk).</li>
+            </ul>
+        </li>
+        <li><strong>Utility:</strong> Payments for inference (locked credits), staking.</li>
+        <li><strong>Value Retention:</strong> Payments convert to locked credits.</li>
+    </ul>
+    </div><div><h3>Proposal Model (Based on `proposal.md`)</h3>
+    <p>This model simulates the tokenomics suggested in the `proposal.md` document, drawing inspiration from Bittensor and Bitcoin. Key features include:</p>
+    <ul>
+        <li><strong>Core Principle:</strong> Verifiable contribution (Uptime & FLOPs), staking for security, long-term sustainability with capped supply.</li>
+        <li><strong>Supply:</strong> Capped (e.g., 100 million DRIA in parameters).</li>
+        <li><strong>Emission:</strong>
+            <ul>
+                <li>Diminishing schedule with periodic halvings (e.g., every 4 years equivalent in epochs).</li>
+                <li>A portion of emissions can go to a community treasury.</li>
+            </ul>
+        </li>
+        <li><strong>Performance-Based Rewards (Contributors):</strong>
+            <ul>
+                <li>Distributed based on a composite score: P_i = U_i * log(1 + F_i) (Uptime * log(1+FLOPs)).</li>
+                <li>Requires minimum uptime.</li>
+            </ul>
+        </li>
+        <li><strong>Staking & Slashing (Validators & potentially Contributors):</strong>
+            <ul>
+                <li>Validators stake DRIA to secure the network and verify work.</li>
+                <li>Contributors might also need to stake.</li>
+                <li>Slashing for downtime, malfeasance, or failure to deliver.</li>
+            </ul>
+        </li>
+        <li><strong>Token Utility:</strong>
+            <ul>
+                <li>Payment for network services (data/compute). These generate fees.</li>
+                <li>Staking for participation and security.</li>
+                <li>Governance (not yet explicitly simulated in mechanics).</li>
+                <li>Transaction fees.</li>
+            </ul>
+        </li>
+        <li><strong>Sustainability:</strong> Transition from emission-based rewards to fee-based rewards as emissions dwindle. A portion of fees can be burned or distributed.</li>
+        <li><strong>Treasury:</strong> Funded by a tax on emissions and/or fees.</li>
+    </ul>
+    </div></div><div class='section'><h2>Model Parameters</h2><div class='param-section-container'><div class='param-section'><h3>Original Model Parameters</h3><table><tr><th>Parameter</th><th>Value</th></tr><tr><td>ADAPTIVE_YIELD_PRICE_THRESHOLD_HIGH</td><td>0.5</td></tr><tr><td>ADAPTIVE_YIELD_PRICE_THRESHOLD_LOW</td><td>0.05</td></tr><tr><td>ADVISORS_PERCENT</td><td>0.05</td></tr><tr><td>ADVISORS_TOKENS_TOTAL</td><td>50000000.0</td></tr><tr><td>ADVISORS_VESTING</td><td>{'cliff': 12, 'linear_months': 36}</td></tr><tr><td>APY_MOVING_AVERAGE_MONTHS</td><td>3</td></tr><tr><td>AVG_GFLOPS_PER_NODE</td><td>1000</td></tr><tr><td>AVG_NODE_OPERATING_COST_USD_MONTHLY</td><td>50</td></tr><tr><td>BASE_STAKING_YIELD_RATE_ANNUAL</td><td>0.05</td></tr><tr><td>BASE_YIELD_BOOST_FACTOR</td><td>1.2</td></tr><tr><td>BASE_YIELD_REDUCTION_FACTOR</td><td>0.8</td></tr><tr><td>COMPUTE_DEMAND_GROWTH_RATE_MONTHLY</td><td>0.01</td></tr><tr><td>CURRENT_INVESTMENT_ROUND_PERCENT</td><td>0.1</td></tr><tr><td>CURRENT_INVESTMENT_ROUND_TOKENS_TOTAL</td><td>100000000</td></tr><tr><td>CURRENT_ROUND_VESTING</td><td>{'cliff': 6, 'linear_months': 30}</td></tr><tr><td>DEFAULT_ECOSYSTEM_FUND_QUARTERLY_RELEASE_PERCENT</td><td>0.025</td></tr><tr><td>DRIA_COST_PER_ORACLE_REQUEST</td><td>0.01</td></tr><tr><td>DRIA_EARNED_BY_ON_PREM_USERS_PER_MONTH</td><td>100000</td></tr><tr><td>ECOSYSTEM_FUND_MONTHLY_RELEASE_FRACTION_OF_QUARTERLY</td><td>0.3333333333333333</td></tr><tr><td>ECOSYSTEM_FUND_PERCENT</td><td>0.19</td></tr><tr><td>ECOSYSTEM_FUND_QUARTERLY_RELEASE_SCHEDULE_YEARLY</td><td>{1: 0.1, 2: 0.1, 3: 0.08, 4: 0.08, 5: 0.05, 6: 0.05, 7: 0.05, 8: 0.05, 9: 0.05, 10: 0.05}</td></tr><tr><td>ECOSYSTEM_FUND_TOKENS_TOTAL</td><td>190000000.0</td></tr><tr><td>EMISSION_RATE_PER_GFLOP_DRIA</td><td>0.0001</td></tr><tr><td>GFLOPS_PER_NODE_MONTHLY_BASE</td><td>1000</td></tr><tr><td>GFLOPS_PER_NODE_MONTHLY_MAX_SCALING</td><td>3.0</td></tr><tr><td>INITIAL_CIRCULATING_SUPPLY</td><td>1000000</td></tr><tr><td>INITIAL_NETWORK_CAPACITY_GFLOPS_PER_MONTH</td><td>100000000</td></tr><tr><td>INITIAL_ON_PREM_CREDIT_CONVERSION_RATE</td><td>1.0</td></tr><tr><td>INITIAL_ORACLE_REQUESTS_PER_MONTH</td><td>1000000</td></tr><tr><td>INITIAL_SERVICE_DEMAND_GFLOPS_MONTHLY</td><td>50000000</td></tr><tr><td>INITIAL_SIMULATED_DRIA_PRICE_USD</td><td>0.1</td></tr><tr><td>INITIAL_USD_CREDIT_PURCHASE_PER_MONTH</td><td>50000</td></tr><tr><td>MAX_ADAPTIVE_BASE_YIELD_ANNUAL</td><td>0.1</td></tr><tr><td>MAX_MONTHLY_NODE_DECLINE_RATE</td><td>0.1</td></tr><tr><td>MAX_MONTHLY_NODE_GROWTH_RATE</td><td>0.2</td></tr><tr><td>MAX_NODES</td><td>100000</td></tr><tr><td>MAX_SUPPLY_DRIA</td><td>1000000000</td></tr><tr><td>MINIMUM_NODE_STAKE_DRIA</td><td>1000</td></tr><tr><td>MIN_ADAPTIVE_BASE_YIELD_ANNUAL</td><td>0.01</td></tr><tr><td>MIN_NODES</td><td>50</td></tr><tr><td>MIN_SIMULATED_DRIA_PRICE_USD</td><td>0.001</td></tr><tr><td>NODE_ADOPTION_CHURN_SENSITIVITY</td><td>0.01</td></tr><tr><td>NODE_GROWTH_SENSITIVITY_TO_APY</td><td>0.01</td></tr><tr><td>NODE_RUNNER_REWARDS_POOL_PERCENT</td><td>0.35</td></tr><tr><td>NODE_RUNNER_REWARDS_POOL_TOTAL</td><td>350000000.0</td></tr><tr><td>ON_PREM_CONVERSION_BURN_RATE</td><td>0.01</td></tr><tr><td>ON_PREM_USER_EARNINGS_GROWTH_RATE_MONTHLY</td><td>0.01</td></tr><tr><td>ORACLE_REQUESTS_GROWTH_RATE_MONTHLY</td><td>0.01</td></tr><tr><td>ORACLE_USAGE_BURN_RATE</td><td>0.005</td></tr><tr><td>PRICE_ADJUSTMENT_SENSITIVITY</td><td>0.05</td></tr><tr><td>PRIVATE_ROUND_INVESTORS_PERCENT</td><td>0.16</td></tr><tr><td>PRIVATE_ROUND_INVESTORS_TOKENS_TOTAL</td><td>160000000</td></tr><tr><td>PRIVATE_ROUND_VESTING</td><td>{'cliff': 6, 'linear_months': 24}</td></tr><tr><td>SCHEDULE_DRIVEN_EMISSION_FACTOR</td><td>0.7</td></tr><tr><td>SERVICE_DEMAND_GROWTH_RATE_MONTHLY</td><td>0.02</td></tr><tr><td>SIMULATION_TIMESTEP_MONTHS</td><td>1</td></tr><tr><td>SIMULATION_YEARS</td><td>10</td></tr><tr><td>STAKE_PER_NODE_DRIA</td><td>1000</td></tr><tr><td>TARGET_NODE_APY_PERCENTAGE</td><td>15.0</td></tr><tr><td>TEAM_ADVISORS_PERCENT</td><td>0.2</td></tr><tr><td>TEAM_ADVISORS_TOKENS_TOTAL</td><td>200000000.0</td></tr><tr><td>TEAM_PERCENT</td><td>0.15</td></tr><tr><td>TEAM_TOKENS_TOTAL</td><td>150000000.0</td></tr><tr><td>TEAM_VESTING</td><td>{'cliff': 12, 'linear_months': 36}</td></tr><tr><td>USAGE_DRIVEN_EMISSION_FACTOR</td><td>0.3</td></tr><tr><td>USD_CREDIT_PURCHASE_GROWTH_RATE_MONTHLY</td><td>0.01</td></tr><tr><td>YEARLY_EMISSION_SCHEDULE_ABSOLUTE</td><td>{1: 49000000.00000001, 2: 42000000.0, 3: 35000000.0, 4: 28000000.0, 5: 24500000.000000004, 6: 21000000.0, 7: 17500000.0, 8: 14000000.0, 9: 10500000.0, 10: 7000000.0}</td></tr><tr><td>YEARLY_EMISSION_SCHEDULE_PERCENT_OF_POOL</td><td>{1: 0.14, 2: 0.12, 3: 0.1, 4: 0.08, 5: 0.07, 6: 0.06, 7: 0.05, 8: 0.04, 9: 0.03, 10: 0.02}</td></tr></table></div><div class='param-section'><h3>Proposal Model Parameters</h3><table><tr><th>Parameter</th><th>Value</th></tr><tr><td>ADVISORS_PERCENT_PROPOSAL</td><td>0.05</td></tr><tr><td>ADVISORS_TOKENS_TOTAL_PROPOSAL</td><td>5000000.0</td></tr><tr><td>ADVISORS_VESTING_PROPOSAL</td><td>{'cliff': 12, 'linear_months': 24}</td></tr><tr><td>AVG_NODE_OPERATING_COST_USD_MONTHLY</td><td>50</td></tr><tr><td>DRIA_DEMAND_GROWTH_RATE_MONTHLY_PROPOSAL</td><td>0.01</td></tr><tr><td>ECOSYSTEM_FUND_MONTHLY_RELEASE_PROPOSAL</td><td>83333.33333333333</td></tr><tr><td>ECOSYSTEM_FUND_PERCENT_PROPOSAL</td><td>0.1</td></tr><tr><td>ECOSYSTEM_FUND_TOKENS_TOTAL_PROPOSAL</td><td>10000000.0</td></tr><tr><td>EMISSION_BUFFER_PERCENT</td><td>0.01</td></tr><tr><td>EMISSION_SUPPLY_POOL_PROPOSAL</td><td>50000000.0</td></tr><tr><td>INITIAL_DRIA_PAYMENTS_FOR_SERVICES_PER_MONTH</td><td>200000</td></tr><tr><td>INITIAL_SIMULATED_DRIA_PRICE_USD_PROPOSAL</td><td>0.5</td></tr><tr><td>INITIAL_USD_CREDIT_PURCHASE_PER_MONTH_PROPOSAL</td><td>100000</td></tr><tr><td>INVESTORS_PERCENT_PROPOSAL</td><td>0.2</td></tr><tr><td>INVESTORS_TOKENS_TOTAL_PROPOSAL</td><td>20000000.0</td></tr><tr><td>INVESTORS_VESTING_PROPOSAL</td><td>{'cliff': 6, 'linear_months': 30}</td></tr><tr><td>MAX_MONTHLY_NODE_DECLINE_RATE</td><td>0.1</td></tr><tr><td>MAX_MONTHLY_NODE_GROWTH_RATE</td><td>0.2</td></tr><tr><td>MIN_MONTHLY_PROFIT_USD_FOR_GROWTH</td><td>100</td></tr><tr><td>MIN_SIMULATED_DRIA_PRICE_USD_PROPOSAL</td><td>0.001</td></tr><tr><td>NODE_COUNT_ADJUSTMENT_LAG_MONTHS</td><td>3</td></tr><tr><td>NODE_GROWTH_SENSITIVITY</td><td>0.1</td></tr><tr><td>PRICE_ADJUSTMENT_SENSITIVITY_PROPOSAL</td><td>0.01</td></tr><tr><td>PROPOSAL_AVG_GFLOPS_PER_CONTRIBUTOR_MONTHLY</td><td>5000</td></tr><tr><td>PROPOSAL_AVG_TX_FEE_DRIA</td><td>0.01</td></tr><tr><td>PROPOSAL_AVG_UPTIME_PER_CONTRIBUTOR</td><td>0.98</td></tr><tr><td>PROPOSAL_HALVING_PERIOD_MONTHS</td><td>48</td></tr><tr><td>PROPOSAL_INITIAL_CIRCULATING_SUPPLY</td><td>1000000</td></tr><tr><td>PROPOSAL_INITIAL_CONTRIBUTOR_NODES</td><td>30000</td></tr><tr><td>PROPOSAL_INITIAL_MONTHLY_EMISSION</td><td>520833.3333333333</td></tr><tr><td>PROPOSAL_INITIAL_VALIDATOR_NODES</td><td>50</td></tr><tr><td>PROPOSAL_MAX_SUPPLY_DRIA</td><td>100000000</td></tr><tr><td>PROPOSAL_MIN_CONTRIBUTOR_STAKE_DRIA</td><td>100</td></tr><tr><td>PROPOSAL_MIN_VALIDATOR_STAKE_DRIA</td><td>5000</td></tr><tr><td>PROPOSAL_SERVICE_FEE_PERCENT_OF_VALUE</td><td>0.01</td></tr><tr><td>PROPOSAL_SLASHING_PERCENTAGE_CONTRIBUTOR_FAILURE</td><td>0.01</td></tr><tr><td>PROPOSAL_SLASHING_PERCENTAGE_VALIDATOR_DOWNTIME</td><td>0.005</td></tr><tr><td>PROPOSAL_SLASHING_PERCENTAGE_VALIDATOR_MALFEASANCE</td><td>0.05</td></tr><tr><td>PROPOSAL_TOTAL_TIMESTEPS</td><td>120</td></tr><tr><td>PROPOSAL_TREASURY_TAX_RATE_FROM_EMISSIONS</td><td>0.05</td></tr><tr><td>PROPOSAL_TREASURY_TAX_RATE_FROM_FEES</td><td>0.1</td></tr><tr><td>PROPOSAL_UPTIME_THRESHOLD_FOR_FULL_REWARDS</td><td>0.95</td></tr><tr><td>SIMULATION_TIMESTEP_MONTHS</td><td>1</td></tr><tr><td>SIMULATION_YEARS</td><td>10</td></tr><tr><td>TARGET_UTILIZATION_FOR_FULL_REWARDS</td><td>0.8</td></tr><tr><td>TEAM_PERCENT_PROPOSAL</td><td>0.15</td></tr><tr><td>TEAM_TOKENS_TOTAL_PROPOSAL</td><td>15000000.0</td></tr><tr><td>TEAM_VESTING_PROPOSAL</td><td>{'cliff': 12, 'linear_months': 36}</td></tr><tr><td>TOKENS_IN_FIRST_HALVING_PERIOD</td><td>25000000.0</td></tr><tr><td>USD_DEMAND_GROWTH_RATE_MONTHLY_PROPOSAL</td><td>0.01</td></tr><tr><td>USD_TO_CREDIT_FX_FEE_PROPOSAL</td><td>0.015</td></tr><tr><td>USD_TO_DRIA_BURN_ACTIVE_PROPOSAL</td><td>True</td></tr></table></div></div></div><div class='section'><h2>Simulation Graphs</h2><div class='plot-section'><h3>Original Model Graphs</h3><img src='original_model_plots.png' alt='Original Model Plots'></div><div class='plot-section'><h3>Proposal Model Graphs</h3><img src='proposal_model_plots.png' alt='Proposal Model Plots'></div></div>
+        </div> <!-- end main-container -->
+    </body>
+    </html>
+    

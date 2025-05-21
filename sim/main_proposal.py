@@ -56,6 +56,15 @@ def main_proposal():
         "reward_scaling_factor_monthly": 0,
         "rewards_to_distribute_after_scaling_monthly": 0,
         "emissions_to_treasury_monthly_proposal": 0,
+
+        # For new features
+        "treasury_outflow_monthly_proposal": 0,
+        "user_churn_event": False,
+        "demand_shock_event": 0,
+        "monthly_profit_per_validator_usd": 0,
+        "validator_growth_rate": 0,
+        "monthly_profit_per_contributor_usd": 0,
+        "contributor_growth_rate": 0,
     }
 
     print("--- Starting Dria Tokenomics Simulation (Proposal Model) ---\n")
