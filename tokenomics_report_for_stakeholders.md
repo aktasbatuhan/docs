@@ -5,20 +5,20 @@
 This report provides a clear, actionable comparison of three tokenomics models for the Dria network. Each model was rigorously simulated across a wide range of parameters and market scenarios (Baseline, Bull, Bear, High Volatility) to assess performance, stability, and risk. The goal is to inform stakeholders about the trade-offs and suitability of each approach for Dria's future.
 
 The models evaluated are:
-*   **Model Alpha (Original):** The current design, emphasizing compute-linked emissions and deflationary mechanisms.
-*   **Model Beta (Proposal):** A research-backed alternative featuring a halving-based emission schedule, performance-based rewards, and explicit governance structures.
+*   **Model Alpha:** The current design, emphasizing compute-linked emissions and deflationary mechanisms.
+*   **Model Beta:** A research-backed alternative featuring a halving-based emission schedule, performance-based rewards, and explicit governance structures.
 *   **Model Gamma (BME):** A benchmark model designed to be highly responsive to broader crypto market dynamics.
 
 ## 2. Tokenomics Model Overviews
 
-### 2.1. Model Alpha (Original)
+### 2.1. Model Alpha
 *   **Core Idea:** Rewards linked directly to network activity and utility, with deflationary pressures from service fees.
 *   **Supply & Emissions:** Capped supply with emissions primarily driven by compute demand and node participation.
 *   **Key Features:** Staking for yield, token burns from service payments, value retention through locked credits.
 *   **Pros:** Incentives directly tied to network usage, inherent deflationary aspects, simpler to understand and communicate.
 *   **Cons:** Emission schedule can be less predictable under fluctuating demand, lacks explicit treasury and advanced governance mechanisms.
 
-### 2.2. Model Beta (Proposal)
+### 2.2. Model Beta
 *   **Core Idea:** Predictable, Bitcoin-like emissions with a halving mechanism, performance-based rewards for network contributors, and a robust governance framework including a treasury.
 *   **Supply & Emissions:** Capped supply with a pre-defined emission schedule that halves every 4 years.
 *   **Key Features:** Distinct roles for contributors and validators, rewards based on uptime and FLOPs, dedicated treasury funded by emissions and fees, token-based governance.
@@ -37,14 +37,14 @@ The models evaluated are:
 Our simulations tested each model across numerous parameter combinations and four distinct market scenarios.
 
 *   **Overall Price Performance & Potential:**
-    *   **Model Beta (Proposal)** demonstrated the capacity for higher peak prices, especially in favorable (Bull) market conditions, but also exhibited a wider range of outcomes, including more significant downside risk in adverse scenarios.
-    *   **Model Alpha (Original)** generally produced more moderate and consistent price levels, showing less extreme highs and lows.
-    *   **Model Gamma (BME)** showed the most considerable price fluctuations, directly reflecting its sensitivity to simulated market trends.
+    *   **Model Beta** demonstrated the capacity for higher peak prices, especially in favorable (Bull) market conditions, but also exhibited a wider range of outcomes, including more significant downside risk in adverse scenarios.
+    *   **Model Alpha** generally produced more moderate and consistent price levels, showing less extreme highs and lows.
+    *   **Model Gamma** showed the most considerable price fluctuations, directly reflecting its sensitivity to simulated market trends.
 
 *   **Stability and Robustness:**
-    *   **Model Alpha (Original)** consistently showed the highest stability, with the tightest distribution of final prices across varied scenarios. This indicates greater resilience to shocks and parameter variations.
-    *   **Model Beta (Proposal)**, while offering higher upside, was more sensitive to initial conditions and market sentiment, leading to greater variability in outcomes.
-    *   **Model Gamma (BME)** was, by design, the most variable in its price outcomes.
+    *   **Model Alpha** consistently showed the highest stability, with the tightest distribution of final prices across varied scenarios. This indicates greater resilience to shocks and parameter variations.
+    *   **Model Beta**, while offering higher upside, was more sensitive to initial conditions and market sentiment, leading to greater variability in outcomes.
+    *   **Model Gamma** was, by design, the most variable in its price outcomes.
 
 *   **Performance Across Market Scenarios:**
     *   In **Bull Market** simulations, Model Beta (Proposal) and Model Gamma (BME) generally captured more upside potential.
@@ -91,12 +91,12 @@ For a simplified view, focusing on a typical "Baseline" market scenario, key per
 
 The choice of tokenomics model is a critical strategic decision that should align with Dria's specific goals, risk tolerance, and developmental stage.
 
-*   **Model Alpha (Original):**
+*   **Model Alpha:**
     *   **Best Suited For:** Situations prioritizing stability, predictable growth, and resilience, especially in the early stages of network development or where a conservative risk profile is preferred.
     *   **Key Advantage:** Robustness against adverse conditions and simpler initial mechanics.
     *   **Considerations:** May offer less aggressive upside capture during strong bull markets compared to more dynamic models.
 
-*   **Model Beta (Proposal):**
+*   **Model Beta:**
     *   **Best Suited For:** Projects with ambitious growth targets, a clear path to significant network demand, and the capacity for active governance and treasury management. Better deployed when the network has achieved some initial traction.
     *   **Key Advantage:** Strong incentives for quality, predictable long-term supply, and a mechanism for ecosystem funding.
     *   **Considerations:** Carries higher risk if demand growth falters or in sustained bear markets. Complexity requires robust community engagement and governance.
