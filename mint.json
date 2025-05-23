@@ -39,7 +39,6 @@
         "docs/payment-flows",
         "docs/core-economic-engine",
         "docs/node-incentives-staking",
-        "docs/simulation_analysis_report",
         "docs/platform-architecture"
       ]
     },
@@ -48,7 +47,8 @@
       "pages": [
         "docs/appendix-toploc"
       ]
-    }
+    },
+    "docs/simulation_analysis_report"
   ],
   "footerSocials": {
     "twitter": "https://twitter.com/driaforall"
