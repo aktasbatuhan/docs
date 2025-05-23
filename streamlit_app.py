@@ -50,44 +50,48 @@ if 'df1' not in st.session_state:
     st.session_state.df1 = None
 if 'df2' not in st.session_state:
     st.session_state.df2 = None
+if 'current_page' not in st.session_state:
+    st.session_state.current_page = "Dashboard"
 
-def render_parameter_input(name, param_info, prefix):
+# --- Navigation --- 
+st.sidebar.header("Navigation")
+current_page = st.sidebar.radio(
+    "Go to",
+    ("Dashboard", "Parameters"),
+    key="navigation_choice"
+)
+st.session_state.current_page = current_page
+
+# --- Parameter Input Rendering Function (Moved from sidebar) ---
+def render_parameter_input_widget(name, param_info, prefix, context_key):
     """Render appropriate input widget based on parameter type"""
     val = param_info['value']
     param_type = param_info['type']
-    
+    widget_key = f"{context_key}_{prefix.lower().replace(' ', '_')}_{name}"
+
     if param_type is bool:
-        return st.sidebar.checkbox(
-            f"{prefix}: {name.replace('_', ' ').title()}", 
+        return st.checkbox(
+            f"{name.replace('_', ' ').title()}", 
             value=val,
-            key=f"{prefix.lower()}_{name}"
+            key=widget_key
         )
     elif param_type in (int, float):
         step = 1 if param_type is int else 0.0001
-        return st.sidebar.number_input(
-            f"{prefix}: {name.replace('_', ' ').title()}", 
+        # Ensure min_value is appropriate, especially for floats that can be small
+        min_val = 0.0 if param_type is float and val >= 0 else None 
+        return st.number_input(
+            f"{name.replace('_', ' ').title()}", 
             value=val,
+            min_value=min_val,
             step=step,
-            key=f"{prefix.lower()}_{name}"
+            key=widget_key,
+            format="%.4f" if param_type is float else "%d"
         )
     elif param_type is dict:
-        # For dictionaries, display them as is without editing capability
-        st.sidebar.text(f"{prefix}: {name.replace('_', ' ').title()}")
-        st.sidebar.json(val)
-        return val
+        st.text(f"{name.replace('_', ' ').title()}:")
+        st.json(val) # Display dicts as JSON, non-editable for now in this view
+        return val # Return the original value as it's not edited here
     return val
-
-# Sidebar for Sim 1 Parameters
-st.sidebar.header("Sim 1 Parameters")
-for name, param_info in st.session_state.params1.items():
-    new_val = render_parameter_input(name, param_info, "Sim 1")
-    st.session_state.params1[name]['value'] = param_info['type'](new_val)
-
-# Sidebar for Sim 2 Parameters
-st.sidebar.header("Sim 2 Parameters")
-for name, param_info in st.session_state.params2.items():
-    new_val = render_parameter_input(name, param_info, "Sim 2")
-    st.session_state.params2[name]['value'] = param_info['type'](new_val)
 
 # Create parameter objects that mimic the original modules
 class ParamObject:
@@ -311,39 +315,85 @@ def generate_plots_sim2(df):
     plt.tight_layout()
     return fig
 
-# Main layout
-col1, col2 = st.columns(2)
+# --- Screens ---
+def render_dashboard_screen():
+    st.header("Simulation Dashboard")
+    # --- Main layout for dashboard ---
+    col1, col2 = st.columns(2)
 
-with col1:
-    st.header("Sim 1: Original Model")
-    run_sim1_button = st.button("Run Simulation 1")
-    
-    if run_sim1_button:
-        with st.spinner("Running Simulation 1..."):
-            st.session_state.df1 = run_sim1()
-        st.success("Simulation 1 complete!")
-    
-    if st.session_state.df1 is not None:
-        st.subheader("Data Preview")
-        st.dataframe(st.session_state.df1.head(10))
+    with col1:
+        st.subheader("Sim 1: Original Model")
+        run_sim1_button = st.button("Run Simulation 1", key="run_sim1_dashboard")
         
-        st.subheader("Visualizations")
-        fig1 = generate_plots_sim1(st.session_state.df1)
-        st.pyplot(fig1)
+        if run_sim1_button:
+            with st.spinner("Running Simulation 1..."):
+                st.session_state.df1 = run_sim1() # Assumes run_sim1 uses p1 from session_state
+            st.success("Simulation 1 complete!")
+        
+        if st.session_state.df1 is not None:
+            st.text("Data Preview (Sim 1)")
+            st.dataframe(st.session_state.df1.head(10))
+            st.text("Visualizations (Sim 1)")
+            fig1 = generate_plots_sim1(st.session_state.df1)
+            st.pyplot(fig1)
 
-with col2:
-    st.header("Sim 2: Proposal Model")
-    run_sim2_button = st.button("Run Simulation 2")
-    
-    if run_sim2_button:
-        with st.spinner("Running Simulation 2..."):
-            st.session_state.df2 = run_sim2()
-        st.success("Simulation 2 complete!")
-    
-    if st.session_state.df2 is not None:
-        st.subheader("Data Preview")
-        st.dataframe(st.session_state.df2.head(10))
+    with col2:
+        st.subheader("Sim 2: Proposal Model")
+        run_sim2_button = st.button("Run Simulation 2", key="run_sim2_dashboard")
         
-        st.subheader("Visualizations")
-        fig2 = generate_plots_sim2(st.session_state.df2)
-        st.pyplot(fig2)
+        if run_sim2_button:
+            with st.spinner("Running Simulation 2..."):
+                st.session_state.df2 = run_sim2() # Assumes run_sim2 uses p2 from session_state
+            st.success("Simulation 2 complete!")
+        
+        if st.session_state.df2 is not None:
+            st.text("Data Preview (Sim 2)")
+            st.dataframe(st.session_state.df2.head(10))
+            st.text("Visualizations (Sim 2)")
+            fig2 = generate_plots_sim2(st.session_state.df2)
+            st.pyplot(fig2)
+
+def render_parameters_screen():
+    st.header("Configure Simulation Parameters")
+    
+    # Create parameter objects from session state for current values
+    # This ensures that changes made on this screen are reflected when simulations are run
+    p1_current = ParamObject(st.session_state.params1)
+    p2_current = ParamObject(st.session_state.params2)
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("Sim 1: Original Model Parameters")
+        for name, param_info in st.session_state.params1.items():
+            # Use a unique context key for this screen to avoid conflicts with potential sidebar widgets if any remained
+            new_val = render_parameter_input_widget(name, param_info, "Sim 1", "params_screen_s1")
+            if new_val != param_info['value']: # Update session state only if value changed
+                 st.session_state.params1[name]['value'] = param_info['type'](new_val)
+                 st.experimental_rerun() # Rerun to reflect change immediately and update p1_current
+
+    with col2:
+        st.subheader("Sim 2: Proposal Model Parameters")
+        for name, param_info in st.session_state.params2.items():
+            new_val = render_parameter_input_widget(name, param_info, "Sim 2", "params_screen_s2")
+            if new_val != param_info['value']: # Update session state only if value changed
+                st.session_state.params2[name]['value'] = param_info['type'](new_val)
+                st.experimental_rerun()
+
+    # Update the global p1 and p2 objects that run_sim functions use
+    # This is crucial for the simulation functions to pick up changes made on this screen.
+    # Need to re-instantiate them based on potentially updated session state.
+    global p1, p2
+    p1 = ParamObject(st.session_state.params1)
+    p2 = ParamObject(st.session_state.params2)
+
+    st.markdown("---_Note: Changes are saved automatically. Navigate to Dashboard to run simulations._---")
+
+# --- Main App Logic --- 
+if st.session_state.current_page == "Dashboard":
+    # Ensure p1 and p2 are up-to-date before rendering dashboard or running sims
+    p1 = ParamObject(st.session_state.params1)
+    p2 = ParamObject(st.session_state.params2)
+    render_dashboard_screen()
+elif st.session_state.current_page == "Parameters":
+    render_parameters_screen()
