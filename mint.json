@@ -21,6 +21,10 @@
     {
       "name": "Website",
       "url": "https://dria.co"
+    },
+    {
+      "name": "Simulation Analysis Report",
+      "url": "/simulation_analysis_report"
     }
   ],
   "tabs": [
@@ -47,8 +51,7 @@
       "pages": [
         "docs/appendix-toploc"
       ]
-    },
-    "docs/simulation_analysis_report"
+    }
   ],
   "footerSocials": {
     "twitter": "https://twitter.com/driaforall"
