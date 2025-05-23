@@ -1,6 +1,7 @@
 # sim/simulation_engine_bme.py
 import math
 import random
+import numpy as np
 
 def run_simulation_bme(initial_state, p, num_years):
     state = initial_state.copy()
@@ -9,8 +10,47 @@ def run_simulation_bme(initial_state, p, num_years):
         state["current_year"] = year
         for month in range(1, 13):
             state["current_month"] = month
-            # --- Demand Growth ---
-            state["usd_demand_per_month"] *= (1 + p.BME_USD_DEMAND_GROWTH_RATE_MONTHLY)
+            # --- Market Feature Extraction ---
+            market_trend_series = state.get('market_trend_monthly_pct_change')
+            base_growth_rate = state.get('base_usd_demand_growth_rate', p.BME_USD_DEMAND_GROWTH_RATE_MONTHLY)
+            impact_factor = state.get('market_trend_impact_factor', 0.5)
+            market_features_df = state.get('market_features_df')
+            current_sim_month_index = (state["current_year"] - 1) * 12 + (state["current_month"] - 1)
+            trend_influence = 0.0
+            volatility_30d = 0.0
+            drawdown = 0.0
+            regime = 'sideways'
+            extreme_event = False
+            if market_features_df is not None and len(market_features_df) > current_sim_month_index:
+                features_row = market_features_df.iloc[current_sim_month_index]
+                trend_influence = features_row.get('trend_index', 0.0)
+                volatility_30d = features_row.get('volatility_30d', 0.0)
+                drawdown = features_row.get('drawdown', 0.0)
+                regime = features_row.get('regime', 'sideways')
+                extreme_event = features_row.get('extreme_event', False)
+            else:
+                if market_trend_series is not None and not isinstance(market_trend_series, type(None)) and len(market_trend_series) > current_sim_month_index:
+                    trend_influence = market_trend_series.iloc[current_sim_month_index]
+            # --- Trend: modulate growth rate ---
+            effective_growth_rate = base_growth_rate * (1 + trend_influence * impact_factor)
+            # --- Regime: switch between optimistic/pessimistic growth ---
+            if regime == 'bull':
+                effective_growth_rate *= 1.2
+            elif regime == 'bear':
+                effective_growth_rate *= 0.8
+            # --- Volatility: modulate churn/staking (example: increase churn if high volatility) ---
+            churn_multiplier = 1.0
+            if volatility_30d > 0.08:
+                churn_multiplier += 0.05
+            # --- Drawdown: trigger panic events ---
+            if drawdown < -0.3:
+                effective_growth_rate *= 0.5
+                churn_multiplier += 0.10
+            # --- Extreme event: apply random demand shock ---
+            if extreme_event:
+                effective_growth_rate *= np.random.uniform(0.7, 1.3)
+            # --- Apply to demand drivers ---
+            state["usd_demand_per_month"] *= (1 + effective_growth_rate)
             state["dria_demand_per_month"] *= (1 + p.BME_DRIA_DEMAND_GROWTH_RATE_MONTHLY)
 
             # --- Burn USD Income (Buy-and-Burn) ---
@@ -38,36 +78,17 @@ def run_simulation_bme(initial_state, p, num_years):
             # --- Node Economics (Growth/Churn) ---
             # Simple profitability-based node count adjustment
             avg_rewards_per_node = emission_this_month / state["node_count"] if state["node_count"] > 0 else 0
-            avg_rewards_per_node_usd = avg_rewards_per_node * state["dria_price_usd"]
-            monthly_profit_usd = avg_rewards_per_node_usd - p.BME_AVG_NODE_OPERATING_COST_USD_MONTHLY
-            if monthly_profit_usd > p.BME_MIN_MONTHLY_PROFIT_USD_FOR_GROWTH:
-                profit_ratio = monthly_profit_usd / p.BME_MIN_MONTHLY_PROFIT_USD_FOR_GROWTH
-                growth_rate = min(profit_ratio * p.BME_MAX_MONTHLY_NODE_GROWTH_RATE, p.BME_MAX_MONTHLY_NODE_GROWTH_RATE)
+            profit_per_node = avg_rewards_per_node - p.BME_AVG_NODE_OPERATING_COST_USD_MONTHLY
+            if profit_per_node > p.BME_MIN_MONTHLY_PROFIT_USD_FOR_GROWTH:
+                growth_rate = min(p.BME_MAX_MONTHLY_NODE_GROWTH_RATE * (profit_per_node / p.BME_MIN_MONTHLY_PROFIT_USD_FOR_GROWTH), p.BME_MAX_MONTHLY_NODE_GROWTH_RATE)
             else:
-                loss_ratio = monthly_profit_usd / p.BME_MIN_MONTHLY_PROFIT_USD_FOR_GROWTH
-                growth_rate = max(loss_ratio * p.BME_MAX_MONTHLY_NODE_DECLINE_RATE, -p.BME_MAX_MONTHLY_NODE_DECLINE_RATE)
+                growth_rate = max(-p.BME_MAX_MONTHLY_NODE_DECLINE_RATE * (abs(profit_per_node) / p.BME_MIN_MONTHLY_PROFIT_USD_FOR_GROWTH), -p.BME_MAX_MONTHLY_NODE_DECLINE_RATE)
+            # Optionally, modulate node churn by churn_multiplier
+            growth_rate *= (1 - 0.5 * (churn_multiplier - 1))
             target_node_count = state["node_count"] * (1 + growth_rate)
-            adjustment_factor = 1 / p.BME_NODE_COUNT_ADJUSTMENT_LAG_MONTHS
-            new_node_count = int(state["node_count"] + (target_node_count - state["node_count"]) * adjustment_factor)
-            new_node_count = max(new_node_count, 100)
-            state["node_count"] = new_node_count
-            state["monthly_profit_per_node_usd"] = monthly_profit_usd
-            state["node_growth_rate"] = growth_rate
+            lag = max(p.BME_NODE_COUNT_ADJUSTMENT_LAG_MONTHS, 1)
+            new_node_count = state["node_count"] + (target_node_count - state["node_count"]) / lag
+            state["node_count"] = max(int(round(new_node_count)), 1)
 
-            # --- Price Simulation (Simple Supply/Demand) ---
-            buy_pressure = burned_from_usd + burned_from_dria_fees + (state["dria_demand_per_month"] * 0.1)
-            sell_pressure = emission_this_month
-            if buy_pressure > 0:
-                price_change_factor = (buy_pressure / (sell_pressure + 1)) - 1
-            elif sell_pressure > 0:
-                price_change_factor = - (sell_pressure / (buy_pressure + 1))
-            else:
-                price_change_factor = 0
-            price_adjustment = price_change_factor * p.BME_PRICE_ADJUSTMENT_SENSITIVITY
-            price_adjustment = max(min(price_adjustment, 0.2), -0.2)
-            state["dria_price_usd"] *= (1 + price_adjustment)
-            state["dria_price_usd"] = max(state["dria_price_usd"], p.BME_MIN_DRIA_PRICE_USD)
-
-            # --- Record State ---
             history.append(state.copy())
     return history 

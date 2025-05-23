@@ -1,0 +1,515 @@
+<head>
+<meta charset="utf-8">
+<meta name="generator" content="pandoc">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Dria Tokenomics: Comparative Analysis &amp; Strategic Recommendations</title>
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.columns{display: flex;}
+div.columns > div{flex: 1;}
+@media screen and (max-width: 600px) {
+var.code{white-space: pre-wrap;}
+div.column{width: 100%;}
+div.columns{display: block;}
+}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #000;
+    color: #fff;
+    line-height: 1.5; /* Slightly reduced line height */
+    padding: 120px; /* Increased padding */
+    max-width: 900px; /* Limit content width */
+    margin: 0 auto; /* Center the body */
+  }
+  
+  @media (max-width: 1000px) {
+    body {
+      padding: 30px; /* Reduced padding on smaller screens */
+      max-width: 100%; /* Allow body to take full width */
+    }
+  }
+
+  h1 {
+    color: #4ADE80;
+  }
+  /* Optional: Style other headings or elements for better contrast */
+  h2, h3, h4, h5, h6 {
+      color: #ccc; /* Slightly lighter for hierarchy */
+  }
+  a {
+      color: #64B5F6; /* A distinct color for links */
+  }
+  table {
+      border-collapse: collapse;
+      margin: 20px 0;
+      width: 100%;
+      max-width: 800px; /* Limit table width */
+      margin-left: auto; 
+      margin-right: auto;
+      background-color: #222; /* Darker background for table */
+  }
+  th, td {
+      border: 1px solid #444;
+      padding: 10px;
+      text-align: left;
+  }
+  th {
+      background-color: #333;
+      color: #eee;
+  }
+  img {
+      max-width: 100%; /* Ensure images are responsive */
+      height: auto;
+      display: block; /* Center images if needed */
+      margin: 20px auto;
+      border: 1px solid #444; /* Optional border for images */
+      padding: 5px;
+      background-color: #111; /* Dark background for images */
+  }
+  /* Style for the note text under the table/images */
+  em, i {
+      color: #aaa; /* Lighter color for notes */
+  }
+  strong {
+      color: #ddd; /* Slightly highlighted bold text */
+  }
+  code, pre {
+      background-color: #333;
+      color: #4ADE80; /* Greenish color for code */
+      padding: 2px 5px;
+      border-radius: 4px;
+  }
+  pre {
+      display: block;
+      padding: 10px;
+      overflow-x: auto; /* Add scroll for long code lines */
+  }
+  p {
+      margin-bottom: 15px; /* Add space below paragraphs */
+  }
+</style>
+</head>
+<body>
+<h1 id="dria-tokenomics-comparative-analysis-strategic-recommendations">Dria Tokenomics: Comparative Analysis</h1>
+<h2 id="introduction">1. Introduction</h2>
+<p>This report provides a clear, actionable comparison of three
+tokenomics models for the Dria network. Each model was rigorously
+simulated across a wide range of parameters and market scenarios
+(Baseline, Bull, Bear, High Volatility) to assess performance,
+stability, and risk. The goal is to inform stakeholders about the
+trade-offs and suitability of each approach for Dria's future.</p>
+<p>The models evaluated are: * <strong>Model Alpha (Sim1):</strong> The current design, emphasizing compute-linked emissions and
+deflationary mechanisms. * <strong>Model Beta (Sim2):</strong> A research-backed alternative featuring a halving-based emission schedule,
+performance-based rewards, and explicit governance structures. *
+<strong>Model Gamma (BME | Sim3):</strong> A benchmark model designed to be highly responsive to broader
+crypto market dynamics.</p>
+<h2 id="tokenomics-model-overviews">2. Tokenomics Model Overviews</h2>
+<h3 id="model-alpha-original">2.1. Model Alpha (Sim1)</h3>
+<ul>
+<li><strong>Core Idea:</strong> Rewards linked directly to network
+activity and utility, with deflationary pressures from service
+fees.</li>
+<li><strong>Supply &amp; Emissions:</strong> Capped supply with
+emissions primarily driven by compute demand and node
+participation.</li>
+<li><strong>Key Features:</strong> Staking for yield, token burns from
+service payments, value retention through locked credits.</li>
+<li><strong>Pros:</strong> Incentives directly tied to network usage,
+inherent deflationary aspects, simpler to understand and
+communicate.</li>
+<li><strong>Cons:</strong> Emission schedule can be less predictable
+under fluctuating demand, lacks explicit treasury and advanced
+governance mechanisms.</li>
+</ul>
+<h3 id="model-beta-proposal">2.2. Model Beta (Sim2)</h3>
+<ul>
+<li><strong>Core Idea:</strong> Predictable, Bitcoin-like emissions with
+a halving mechanism, performance-based rewards for network contributors,
+and a robust governance framework including a treasury.</li>
+<li><strong>Supply &amp; Emissions:</strong> Capped supply with a
+pre-defined emission schedule that halves every 4 years.</li>
+<li><strong>Key Features:</strong> Distinct roles for contributors and
+validators, rewards based on uptime and FLOPs, dedicated treasury funded
+by emissions and fees, token-based governance.</li>
+<li><strong>Pros:</strong> Transparent and predictable long-term
+emission schedule, dedicated funding for ecosystem development, strong
+incentive alignment for quality service.</li>
+<li><strong>Cons:</strong> More complex than Model Alpha, fixed emission
+rate may not always perfectly align with short-term network growth or
+contraction.</li>
+</ul>
+<h3 id="model-gamma-bme">2.3. Model Gamma (BME | Sim3)</h3>
+<ul>
+<li><strong>Core Idea:</strong> Token emissions and rewards are dynamically modulated by external market trends (e.g., overall crypto market, DePIN sector) and internal network demand. The design aims to create a dynamic equilibrium where, over time, the amount of DRIA burned from service fees could balance the amount of DRIA emitted as rewards, thereby stabilizing the token's price.</li>
+<li><strong>Supply &amp; Emissions:</strong> Highly adaptive and
+market-driven.</li>
+<li><strong>Key Features:</strong> Designed for maximum responsiveness
+to external economic conditions.</li>
+<li><strong>Pros:</strong> Potential to capitalize on broad market
+uptrends and self-adjust during downturns.</li>
+<li><strong>Cons:</strong> Inherently less predictable for long-term
+financial planning, potential for higher volatility if market
+correlations are strong and negative.</li>
+</ul>
+<h2 id="weaknesses">Weaknesses of Each Tokenomics Mechanism</h2>
+
+<h3 id="sim1-weaknesses">Model Alpha (Sim1)</h3>
+<ul>
+  <li><strong>Emission Predictability:</strong> Emissions are closely tied to network activity and demand, which can fluctuate. This makes long-term supply and reward forecasting more difficult for both the team and participants.</li>
+  <li><strong>Lack of Explicit Treasury/Governance:</strong> There is no built-in mechanism for ecosystem funding or on-chain governance, which can limit the protocol's ability to adapt, fund growth, or respond to crises.</li>
+  <li><strong>Deflation Reliance:</strong> The model relies on deflationary mechanisms (burns) to counteract inflation, but if network usage drops, burns may be insufficient, leading to potential oversupply.</li>
+  <li><strong>Staking Simplicity:</strong> While simple, the staking mechanism may not optimally align incentives for long-term engagement or high-quality contributions.</li>
+  <li><strong>Resilience to Shocks:</strong> Although robust in many scenarios, the lack of adaptive levers (like a treasury or dynamic emissions) can make it less responsive to sudden market or demand shocks.</li>
+</ul>
+
+<h3 id="sim2-weaknesses">Model Beta (Sim2)</h3>
+<ul>
+  <li><strong>Complexity:</strong> The model introduces more moving parts (halving, performance-based rewards, explicit validator/contributor roles, treasury, governance), which can be harder to communicate, implement, and govern.</li>
+  <li><strong>Fixed Emission Schedule:</strong> The halving schedule is predictable but inflexible. If network growth outpaces emissions, rewards may become too scarce; if growth lags, excess emissions could cause inflation.</li>
+  <li><strong>Governance Risks:</strong> On-chain governance and treasury management require active, informed participation. Poor governance can lead to misallocation of funds or protocol capture by special interests.</li>
+  <li><strong>Performance Metrics:</strong> Reliance on performance-based rewards (e.g., uptime, FLOPs) can be gamed or manipulated if not carefully designed and monitored.</li>
+  <li><strong>Treasury Utilization:</strong> If the treasury is not used effectively, it can become a source of inefficiency or even a target for exploitation.</li>
+</ul>
+
+<h3 id="sim3-weaknesses">Model Gamma (BME | Sim3)</h3>
+<ul>
+  <li><strong>High Volatility:</strong> By design, emissions and rewards are highly sensitive to external market trends. This can lead to large swings in incentives, price, and network participation.</li>
+  <li><strong>Unpredictability:</strong> The model's adaptability can make it difficult for participants to plan or for the protocol to maintain stability, especially in turbulent markets.</li>
+  <li><strong>Potential for Overreaction:</strong> If market signals are noisy or manipulated, the protocol may overreact, amplifying booms and busts.</li>
+  <li><strong>Lack of Long-Term Anchors:</strong> Without a fixed supply or emission schedule, there is less certainty for long-term holders and planners.</li>
+  <li><strong>Complex Tuning Required:</strong> The model requires careful calibration of how much market trends influence emissions and demand, or it risks instability.</li>
+</ul>
+
+<h2 id="simulation-settings">Simulation Settings</h2>
+<p>Your simulations were designed to robustly test each model under a wide range of conditions. Here are the key settings and approaches:</p>
+<ul>
+  <li><strong>Parameter Sweeps:</strong> Simulations tested different starting network sizes, demand growth rates, initial prices, and market trend sensitivities.</li>
+  <li><strong>Market Scenarios:</strong> Baseline (average), Bull (positive), Bear (negative), and High Volatility (large swings) scenarios were simulated.</li>
+  <li><strong>Market Data Integration:</strong> Real historical crypto and DePIN sector data were used to generate realistic market trend indices, which modulated demand growth in the simulations.</li>
+  <li><strong>Simulation Duration:</strong> Simulations typically ran for 5 or 10 years, with monthly timesteps.</li>
+  <li><strong>Metrics Tracked:</strong> Final price, node count, APY, utilization, treasury balance, emissions, burns, failures (e.g., price &lt; $0.10 or node count &lt; 100), and more.</li>
+  <li><strong>Robustness Testing:</strong> By sweeping across many parameter combinations and market scenarios, the simulations assessed not just average outcomes but also the frequency and nature of failures or extreme results.</li>
+</ul>
+<h2 id="simulation-highlights-key-findings">3. Simulation Highlights
+&amp; Key Findings</h2>
+<p>Our simulations tested each model across numerous parameter
+combinations and four distinct market scenarios.</p>
+<ul>
+<li><strong>Overall Price Performance &amp; Potential:</strong>
+<ul>
+<li><strong>Model Beta (Sim2)</strong> demonstrated the capacity for
+higher peak prices, especially in favorable (Bull) market conditions,
+but also exhibited a wider range of outcomes, including more significant
+downside risk in adverse scenarios.</li>
+<li><strong>Model Alpha (Sim1)</strong> generally produced more
+moderate and consistent price levels, showing less extreme highs and
+lows.</li>
+<li><strong>Model Gamma (BME | Sim3)</strong> showed the most considerable
+price fluctuations, directly reflecting its sensitivity to simulated
+market trends.</li>
+</ul></li>
+<li><strong>Stability and Robustness:</strong>
+<ul>
+<li><strong>Model Alpha (Sim1)</strong> consistently showed the
+highest stability, with the tightest distribution of final prices across
+varied scenarios. This indicates greater resilience to shocks and
+parameter variations.</li>
+<li><strong>Model Beta (Sim2)</strong>, while offering higher
+upside, was more sensitive to initial conditions and market sentiment,
+leading to greater variability in outcomes.</li>
+<li><strong>Model Gamma (BME | Sim3)</strong> was, by design, the most variable
+in its price outcomes.</li>
+</ul></li>
+<li><strong>Performance Across Market Scenarios:</strong>
+<ul>
+<li>In <strong>Bull Market</strong> simulations, Model Beta (Sim2)
+and Model Gamma (BME | Sim3) generally captured more upside potential.</li>
+<li>In <strong>Bear Market</strong> simulations, Model Alpha (Sim1)
+proved more defensive, maintaining value better than the more
+market-sensitive alternatives.</li>
+<li><strong>High Volatility</strong> scenarios amplified the
+characteristics of each model, with Model Alpha (Sim1) remaining
+relatively more stable.</li>
+</ul></li>
+<li><strong>Risk of "Failure" (Defined as price &lt; $0.10 or node count
+&lt; 100):</strong>
+<ul>
+<li><strong>Model Beta (Sim2)</strong> and <strong>Model Gamma
+(BME | Sim3)</strong> showed a higher number of instances where outcomes fell
+into this "failure" category, particularly under Bear market conditions
+or unfavorable parameter sets (e.g., low initial demand growth).</li>
+<li><strong>Model Alpha (Sim1)</strong> experienced fewer such
+extreme negative outcomes, underscoring its robustness.</li>
+</ul></li>
+</ul>
+<h2 id="visual-insights-from-simulations">4. Visual Insights from
+Simulations</h2>
+<p>The following charts, representative of those in the
+<code>/output</code> directory, illustrate these key findings.</p>
+<h3 id="final-price-distribution-by-model">4.1. Final Price Distribution
+by Model</h3>
+<p>This boxplot visualizes the range of final DRIA prices (USD) achieved
+by each model across all simulated scenarios and parameter settings. A
+shorter box and fewer outliers (dots) suggest more consistent and
+predictable pricing.</p>
+<figure>
+<img src="output/final_price_boxplot.png" alt="Final Price Boxplot" />
+<figcaption aria-hidden="true">Final Price Boxplot</figcaption>
+</figure>
+<h3 id="model-robustness-standard-deviation-of-final-price">4.2. Model
+Robustness (Standard Deviation of Final Price)</h3>
+<p>This bar chart compares the standard deviation of the final DRIA
+price for each model. A lower bar indicates less price dispersion and
+thus greater stability and predictability over the range of tested
+conditions.</p>
+<figure>
+<img src="output/robustness_stddev.png"
+alt="Robustness: Std Dev of Final Price" />
+<figcaption aria-hidden="true">Robustness: Std Dev of Final
+Price</figcaption>
+</figure>
+<h3 id="mean-final-price-by-market-scenario">4.3. Mean Final Price by
+Market Scenario</h3>
+<p>This chart displays the average final DRIA price for each model under
+the different simulated market scenarios (Baseline, Bull, Bear, High
+Volatility), highlighting their responsiveness to broader market
+conditions.</p>
+<figure>
+<img src="output/scenario_comparison_barplot.png"
+alt="Mean Final Price by Scenario" />
+<figcaption aria-hidden="true">Mean Final Price by Scenario</figcaption>
+</figure>
+<h3 id="illustrative-summary-table-baseline-scenario-focus">4.4.
+Illustrative Summary Table (Baseline Scenario Focus)</h3>
+<p>For a simplified view, focusing on a typical "Baseline" market
+scenario, key performance indicators conceptually compare as follows.
+(Detailed CSVs in <code>/output</code> provide precise data across all
+scenarios).</p>
+<table>
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 22%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+</colgroup>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Model Alpha (Sim1)</th>
+<th>Model Beta (Sim2)</th>
+<th>Model Gamma (BME | Sim3)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Avg. Final Price (USD)</strong></td>
+<td>Moderate</td>
+<td>Higher Potential</td>
+<td>Highly Variable</td>
+</tr>
+<tr>
+<td><strong>Price Stability</strong></td>
+<td>High</td>
+<td>Medium</td>
+<td>Low</td>
+</tr>
+<tr>
+<td><strong>Avg. Final Node Count</strong></td>
+<td>Steady Growth</td>
+<td>Potential High</td>
+<td>Variable</td>
+</tr>
+<tr>
+<td><strong>Resilience to Low Demand</strong></td>
+<td>Medium-High</td>
+<td>Medium</td>
+<td>Low-Medium</td>
+</tr>
+</tbody>
+</table>
+<p><em>(Note: This table is a conceptual illustration. For exact figures
+and detailed breakdowns, please refer to the CSV files and full plot
+sets in the <code>/output</code> directory, such as
+<code>final_price_summary_stats.csv</code> and the per-scenario
+results.)</em></p>
+<h2 id="strategic-considerations-recommendations">5. Strategic
+Considerations &amp; Recommendations</h2>
+<p>The choice of tokenomics model is a critical strategic decision that
+should align with Dria's specific goals, risk tolerance, and
+developmental stage.</p>
+<ul>
+<li><strong>Model Alpha (Sim1):</strong>
+<ul>
+<li><strong>Best Suited For:</strong> Situations prioritizing stability,
+predictable growth, and resilience, especially in the early stages of
+network development or where a conservative risk profile is
+preferred.</li>
+<li><strong>Key Advantage:</strong> Robustness against adverse
+conditions and simpler initial mechanics.</li>
+<li><strong>Considerations:</strong> May offer less aggressive upside
+capture during strong bull markets compared to more dynamic models.</li>
+</ul></li>
+<li><strong>Model Beta (Sim2):</strong>
+<ul>
+<li><strong>Best Suited For:</strong> Projects with ambitious growth
+targets, a clear path to significant network demand, and the capacity
+for active governance and treasury management. Better deployed when the
+network has achieved some initial traction.</li>
+<li><strong>Key Advantage:</strong> Strong incentives for quality,
+predictable long-term supply, and a mechanism for ecosystem
+funding.</li>
+<li><strong>Considerations:</strong> Carries higher risk if demand
+growth falters or in sustained bear markets. Complexity requires robust
+community engagement and governance.</li>
+</ul></li>
+<li><strong>Model Gamma (BME | Sim3):</strong>
+<ul>
+<li><strong>Best Suited For:</strong> Primarily as a research benchmark
+or for experimental phases where understanding market correlation
+effects is paramount.</li>
+<li><strong>Key Advantage:</strong> Maximum adaptability to external
+market signals.</li>
+<li><strong>Considerations:</strong> Likely too unpredictable and
+potentially volatile for a primary production environment without
+substantial dampening mechanisms or further refinement.</li>
+</ul></li>
+</ul>
+<p><strong>Recommended Path Forward:</strong></p>
+<ol type="1">
+<li><strong>Review Simulation Outputs:</strong> Stakeholders should
+examine the comprehensive simulation outputs (graphs, CSVs, tables) in
+the <code>/output</code> directory to understand performance under
+specific parameter sets and market conditions.</li>
+<li><strong>Align on Risk &amp; Growth:</strong> Facilitate a strategic
+discussion to align on the desired balance between growth potential and
+risk tolerance.</li>
+<li><strong>Consider a Phased or Hybrid Approach:</strong> It may be
+prudent to launch with a more stable model (like Model Alpha (Sim1))
+and plan a future evolution to incorporate elements from Model Beta
+(Sim2) as the network matures, governance structures solidify, and demand
+becomes more established.</li>
+<li><strong>Develop Adaptive Strategies:</strong> Regardless of the
+chosen model, identify key performance indicators (KPIs) from the
+simulations. For Model Beta (Sim2), in particular, define strategies for
+treasury deployment or parameter adjustments in response to real-world
+deviations from simulated conditions.</li>
+</ol>
+<h2 id="conclusion">6. Conclusion</h2>
+<p>These simulations provide a data-driven foundation for making an
+informed decision on Dria's tokenomics. Model Alpha (Sim1) offers
+stability, Model Beta (Sim2) offers higher growth potential with
+managed risks, and Model Gamma (BME | Sim3) serves as a valuable,
+market-sensitive benchmark. The optimal choice will balance Dria's
+strategic ambitions with a realistic assessment of market conditions and
+internal capacities.</p>
+<hr />
+<p><em>This report is based on recent simulation data. All referenced
+charts and detailed output files are located in the project's
+<code>/output</code> directory.</em></p>
+<hr />
+<h2 id="appendix-key-visualizations">Appendix: Key Visualizations</h2>
+
+<figure>
+  <img src="output/comparative_bar_final_node_count_Baseline.png" alt="Final Node Count by Model (Baseline)" />
+  <figcaption>Fig 1: Final Node Count by Model (Baseline Scenario)</figcaption>
+</figure>
+
+<figure>
+  <img src="output/comparative_bar_final_price_Baseline.png" alt="Final Price by Model (Baseline)" />
+  <figcaption>Fig 2: Final Price by Model (Baseline Scenario)</figcaption>
+</figure>
+
+<figure>
+  <img src="output/failure_case_frequency.png" alt="Frequency of Failure Cases" />
+  <figcaption>Fig 3: Frequency of Failure Cases</figcaption>
+</figure>
+
+<figure>
+  <img src="output/final_price_boxplot.png" alt="Final Price Distribution by Model" />
+  <figcaption>Fig 4: Final Price Distribution by Model (Boxplot)</figcaption>
+</figure>
+
+<figure>
+  <img src="output/final_price_histogram.png" alt="Final Price Distribution (All Scenarios)" />
+  <figcaption>Fig 5: Final Price Distribution (Histogram - All Scenarios)</figcaption>
+</figure>
+
+<figure>
+  <img src="output/pairwise_scatter_Original_apy.png" alt="Original: Final Price vs. Avg APY" />
+  <figcaption>Fig 6: Model Alpha (Sim1) - Final Price vs. Average APY</figcaption>
+</figure>
+
+<figure>
+  <img src="output/pairwise_scatter_Original_utilization.png" alt="Original: Final Price vs. Avg Utilization" />
+  <figcaption>Fig 7: Model Alpha (Sim1) - Final Price vs. Average Utilization</figcaption>
+</figure>
+
+<figure>
+  <img src="output/pairwise_scatter_Proposal_utilization.png" alt="Proposal: Final Price vs. Avg Utilization" />
+  <figcaption>Fig 8: Model Beta (Sim2) - Final Price vs. Average Utilization</figcaption>
+</figure>
+
+<figure>
+  <img src="output/parameter_sensitivity_BASE_USD_DEMAND_GROWTH_RATE_MONTHLY.png" alt="Sensitivity: USD Demand Growth vs. Final Price" />
+  <figcaption>Fig 9: Parameter Sensitivity - USD Demand Growth Rate vs. Final Price</figcaption>
+</figure>
+
+<figure>
+  <img src="output/parameter_sensitivity_INITIAL_DRIA_PAYMENTS_FOR_SERVICES_PER_MONTH.png" alt="Sensitivity: DRIA Payments vs. Final Price" />
+  <figcaption>Fig 10: Parameter Sensitivity - Initial DRIA Payments vs. Final Price</figcaption>
+</figure>
+
+<figure>
+  <img src="output/parameter_sensitivity_INITIAL_DRIA_PRICE_USD.png" alt="Sensitivity: Initial DRIA Price vs. Final Price" />
+  <figcaption>Fig 11: Parameter Sensitivity - Initial DRIA Price vs. Final Price</figcaption>
+</figure>
+
+<figure>
+  <img src="output/parameter_sensitivity_INITIAL_NODE_COUNT.png" alt="Sensitivity: Initial Node Count vs. Final Price" />
+  <figcaption>Fig 12: Parameter Sensitivity - Initial Node Count vs. Final Price</figcaption>
+</figure>
+
+<figure>
+  <img src="output/parameter_sensitivity_INITIAL_USD_CREDIT_PURCHASE_PER_MONTH.png" alt="Sensitivity: USD Credit Purchase vs. Final Price" />
+  <figcaption>Fig 13: Parameter Sensitivity - Initial USD Credit Purchase vs. Final Price</figcaption>
+</figure>
+
+<figure>
+  <img src="output/parameter_sensitivity_MARKET_TREND_IMPACT_FACTOR.png" alt="Sensitivity: Market Trend Impact vs. Final Price" />
+  <figcaption>Fig 14: Parameter Sensitivity - Market Trend Impact Factor vs. Final Price</figcaption>
+</figure>
+
+<figure>
+  <img src="output/parameter_sensitivity_SIMULATION_YEARS.png" alt="Sensitivity: Simulation Years vs. Final Price" />
+  <figcaption>Fig 15: Parameter Sensitivity - Simulation Years vs. Final Price</figcaption>
+</figure>
+
+<figure>
+  <img src="output/robustness_iqr.png" alt="Robustness: IQR of Final Price" />
+  <figcaption>Fig 16: Robustness - IQR of Final Price by Model</figcaption>
+</figure>
+
+<figure>
+  <img src="output/robustness_stddev.png" alt="Robustness: Std Dev of Final Price" />
+  <figcaption>Fig 17: Robustness - Standard Deviation of Final Price by Model</figcaption>
+</figure>
+
+<figure>
+  <img src="output/scenario_comparison_barplot.png" alt="Mean Final Price by Model & Scenario" />
+  <figcaption>Fig 18: Mean Final Price by Model and Market Scenario</figcaption>
+</figure>
+
+<figure>
+  <img src="output/scenario_comparison_boxplot.png" alt="Final Price Distribution by Model & Scenario" />
+  <figcaption>Fig 19: Final Price Distribution by Model and Market Scenario (Boxplot)</figcaption>
+</figure>
+
+</body>

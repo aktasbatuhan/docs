@@ -1,7 +1,8 @@
 # sim/simulation_engine_proposal.py
 import math
 import random
-# import model_parameters_proposal as p # This will be passed as an argument
+import model_parameters_proposal as params
+import numpy as np
 
 def calculate_monthly_unlock(total_tokens, cliff_months, linear_vesting_months, current_simulation_month, vested_to_date):
     """Calculates tokens unlocked for a single category in the current month."""
@@ -345,20 +346,59 @@ def handle_service_fees_proposal(state, p):
     return state
 
 def update_demand_drivers_proposal(state, p):
-    """Update demand drivers with user churn and demand shocks."""
-    # Normal growth
-    state["current_usd_demand_per_month_proposal"] *= (1 + p.USD_DEMAND_GROWTH_RATE_MONTHLY_PROPOSAL)
+    """Update demand drivers with user churn, demand shocks, and market features."""
+    # --- Market Feature Extraction ---
+    market_trend_series = state.get('market_trend_monthly_pct_change')
+    base_growth_rate = state.get('base_usd_demand_growth_rate', p.USD_DEMAND_GROWTH_RATE_MONTHLY_PROPOSAL)
+    impact_factor = state.get('market_trend_impact_factor', 0.5)
+    market_features_df = state.get('market_features_df')
+    current_sim_month_index = (state["current_year"] - 1) * 12 + (state["current_month"] - 1)
+    trend_influence = 0.0
+    volatility_30d = 0.0
+    drawdown = 0.0
+    regime = 'sideways'
+    extreme_event = False
+    if market_features_df is not None and len(market_features_df) > current_sim_month_index:
+        features_row = market_features_df.iloc[current_sim_month_index]
+        trend_influence = features_row.get('trend_index', 0.0)
+        volatility_30d = features_row.get('volatility_30d', 0.0)
+        drawdown = features_row.get('drawdown', 0.0)
+        regime = features_row.get('regime', 'sideways')
+        extreme_event = features_row.get('extreme_event', False)
+    else:
+        if market_trend_series is not None and not isinstance(market_trend_series, type(None)) and len(market_trend_series) > current_sim_month_index:
+            trend_influence = market_trend_series.iloc[current_sim_month_index]
+    # --- Trend: modulate growth rate ---
+    effective_growth_rate = base_growth_rate * (1 + trend_influence * impact_factor)
+    # --- Regime: switch between optimistic/pessimistic growth ---
+    if regime == 'bull':
+        effective_growth_rate *= 1.2
+    elif regime == 'bear':
+        effective_growth_rate *= 0.8
+    # --- Volatility: modulate churn/staking (example: increase churn if high volatility) ---
+    churn_multiplier = 1.0
+    if volatility_30d > 0.08:
+        churn_multiplier += 0.05
+    # --- Drawdown: trigger panic events ---
+    if drawdown < -0.3:
+        effective_growth_rate *= 0.5
+        churn_multiplier += 0.10
+    # --- Extreme event: apply random demand shock ---
+    if extreme_event:
+        effective_growth_rate *= np.random.uniform(0.7, 1.3)
+    # --- Apply to demand drivers ---
+    state["current_usd_demand_per_month_proposal"] *= (1 + effective_growth_rate)
     state["current_dria_demand_per_month_proposal"] *= (1 + p.DRIA_DEMAND_GROWTH_RATE_MONTHLY_PROPOSAL)
-    # User churn event
-    if random.random() < p.USER_CHURN_PROBABILITY:
+    # User churn event (original logic, can be modulated by churn_multiplier)
+    if np.random.random() < p.USER_CHURN_PROBABILITY * churn_multiplier:
         state["current_usd_demand_per_month_proposal"] *= (1 - p.USER_CHURN_MAGNITUDE)
         state["current_dria_demand_per_month_proposal"] *= (1 - p.USER_CHURN_MAGNITUDE)
         state["user_churn_event"] = True
     else:
         state["user_churn_event"] = False
-    # Demand shock event
-    if random.random() < p.DEMAND_SHOCK_PROBABILITY:
-        shock = 1 + (p.DEMAND_SHOCK_MAGNITUDE if random.random() < 0.5 else -p.DEMAND_SHOCK_MAGNITUDE)
+    # Demand shock event (original logic)
+    if np.random.random() < p.DEMAND_SHOCK_PROBABILITY:
+        shock = 1 + (p.DEMAND_SHOCK_MAGNITUDE if np.random.random() < 0.5 else -p.DEMAND_SHOCK_MAGNITUDE)
         state["current_usd_demand_per_month_proposal"] *= shock
         state["current_dria_demand_per_month_proposal"] *= shock
         state["demand_shock_event"] = shock

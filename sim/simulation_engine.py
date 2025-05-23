@@ -1,6 +1,7 @@
 # sim/simulation_engine.py
 
-from sim import model_parameters as params
+import model_parameters as params
+import numpy as np
 
 def calculate_monthly_unlock(total_tokens, cliff_months, linear_vesting_months, current_simulation_month, vested_to_date):
     """Calculates tokens unlocked for a single category in the current month."""
@@ -189,7 +190,7 @@ def handle_staking(state, p):
     if previous_node_count > 0:
         apy_difference_percentage_points = average_apy_for_decision - p.TARGET_NODE_APY_PERCENTAGE
         node_growth_factor_monthly = apy_difference_percentage_points * p.NODE_ADOPTION_CHURN_SENSITIVITY
-        max_monthly_change = 0.20
+        max_monthly_change = 0.20 
         node_growth_factor_monthly = max(min(node_growth_factor_monthly, max_monthly_change), -max_monthly_change)
         target_node_count = previous_node_count * (1 + node_growth_factor_monthly)
         # Node join/leave lag: move fraction of way toward target
@@ -360,14 +361,61 @@ def run_simulation(initial_state, num_years):
     return history
 
 def update_demand_drivers(state, p):
-    """Updates demand driver values in the state based on their monthly growth rates."""
-    state["current_usd_credit_purchase_per_month"] *= (1 + p.USD_CREDIT_PURCHASE_GROWTH_RATE_MONTHLY)
+    """Updates demand driver values in the state based on their monthly growth rates and market features."""
+    # --- Market Feature Extraction ---
+    # These are passed in initial_state by compare_with_market.py
+    market_trend_series = state.get('market_trend_monthly_pct_change')
+    base_growth_rate = state.get('base_usd_demand_growth_rate', p.USD_CREDIT_PURCHASE_GROWTH_RATE_MONTHLY)
+    impact_factor = state.get('market_trend_impact_factor', 0.5)
+    # Advanced features (optional, if passed in)
+    market_features_df = state.get('market_features_df')  # DataFrame with index as date, columns as features
+    current_sim_month_index = (state["current_year"] - 1) * 12 + (state["current_month"] - 1)
+    # Default values
+    trend_influence = 0.0
+    volatility_30d = 0.0
+    drawdown = 0.0
+    regime = 'sideways'
+    extreme_event = False
+    # If market_features_df is available, use it
+    if market_features_df is not None and len(market_features_df) > current_sim_month_index:
+        # Get the row for the current month (using monthly resample if needed)
+        features_row = market_features_df.iloc[current_sim_month_index]
+        trend_influence = features_row.get('trend_index', 0.0)
+        volatility_30d = features_row.get('volatility_30d', 0.0)
+        drawdown = features_row.get('drawdown', 0.0)
+        regime = features_row.get('regime', 'sideways')
+        extreme_event = features_row.get('extreme_event', False)
+    else:
+        # Fallback: use trend series if available
+        if market_trend_series is not None and not isinstance(market_trend_series, type(None)) and len(market_trend_series) > current_sim_month_index:
+            trend_influence = market_trend_series.iloc[current_sim_month_index]
+    # --- Trend: modulate growth rate ---
+    effective_growth_rate = base_growth_rate * (1 + trend_influence * impact_factor)
+    # --- Regime: switch between optimistic/pessimistic growth ---
+    if regime == 'bull':
+        effective_growth_rate *= 1.2
+    elif regime == 'bear':
+        effective_growth_rate *= 0.8
+    # --- Volatility: modulate churn/staking (example: increase churn if high volatility) ---
+    churn_multiplier = 1.0
+    if volatility_30d > 0.08:  # Example threshold for high volatility
+        churn_multiplier += 0.05
+    # --- Drawdown: trigger panic events ---
+    if drawdown < -0.3:
+        effective_growth_rate *= 0.5
+        churn_multiplier += 0.10
+    # --- Extreme event: apply random demand shock ---
+    if extreme_event:
+        effective_growth_rate *= np.random.uniform(0.7, 1.3)
+    # --- Apply to demand drivers ---
+    state["current_usd_credit_purchase_per_month"] *= (1 + effective_growth_rate)
+    # You can apply similar logic to other demand drivers if desired:
     state["current_dria_earned_by_on_prem_users_per_month"] *= (1 + p.ON_PREM_USER_EARNINGS_GROWTH_RATE_MONTHLY)
     state["current_oracle_requests_per_month"] *= (1 + p.ORACLE_REQUESTS_GROWTH_RATE_MONTHLY)
-    
     # Update compute demand and capacity
     state["current_compute_demand_gflops_monthly"] *= (1 + p.COMPUTE_DEMAND_GROWTH_RATE_MONTHLY)
-    # state["current_network_capacity_gflops_monthly"] *= (1 + p.NETWORK_CAPACITY_GROWTH_RATE_MONTHLY) # Replaced by dynamic capacity calculation in handle_staking
+    # Optionally, apply churn_multiplier to node count or other churn-sensitive variables
+    # Example: state["current_node_count"] = int(state["current_node_count"] * (1 - 0.01 * churn_multiplier))
     return state
 
 def calculate_node_economics(state, p):
