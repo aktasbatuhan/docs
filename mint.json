@@ -29,11 +29,27 @@
   ],
   "tabs": [
     {
-      "name": "Documentation",
-      "url": "overview"
+      "name": "Simulation Analysis Report",
+      "url": "simulation_analysis_report"
     }
   ],
   "navigation": [
+    {
+      "group": "Simulation Analysis Report",
+      "pages": [
+        "docs/simulation_analysis_report"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "twitter": "https://twitter.com/driaforall"
+  },
+  "analytics": {
+    "ga4": {
+      "measurementId": "G-XXXXXXXXXX"
+    }
+  },
+  "_hidden_navigation": [
     {
       "group": "Tokenomics",
       "pages": [
@@ -52,13 +68,5 @@
         "docs/appendix-toploc"
       ]
     }
-  ],
-  "footerSocials": {
-    "twitter": "https://twitter.com/driaforall"
-  },
-  "analytics": {
-    "ga4": {
-      "measurementId": "G-XXXXXXXXXX"
-    }
-  }
+  ]
 } 

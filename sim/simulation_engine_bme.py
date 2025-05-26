@@ -90,5 +90,32 @@ def run_simulation_bme(initial_state, p, num_years):
             new_node_count = state["node_count"] + (target_node_count - state["node_count"]) / lag
             state["node_count"] = max(int(round(new_node_count)), 1)
 
+            # --- Price Update Based on Supply/Demand ---
+            # Simple price model: price reacts to burns vs emissions
+            total_burned_this_month = burned_from_usd + burned_from_dria_fees
+            net_supply_change = emission_this_month - total_burned_this_month
+            
+            # Price pressure calculation
+            if state["circulating_supply"] > 0:
+                supply_pressure = net_supply_change / state["circulating_supply"]
+            else:
+                supply_pressure = 0
+                
+            # Demand pressure from growth
+            demand_pressure = effective_growth_rate * 0.5  # Growth translates to some price pressure
+            
+            # Net price change
+            price_change_factor = demand_pressure - supply_pressure
+            price_adjustment = price_change_factor * p.BME_PRICE_ADJUSTMENT_SENSITIVITY
+            
+            # Apply price change with bounds
+            price_adjustment = max(min(price_adjustment, 0.2), -0.2)  # Cap at +/- 20% per month
+            state["dria_price_usd"] *= (1 + price_adjustment)
+            state["dria_price_usd"] = max(state["dria_price_usd"], p.BME_MIN_DRIA_PRICE_USD)
+            
+            # Store monthly metrics
+            state["monthly_profit_per_node_usd"] = profit_per_node
+            state["node_growth_rate"] = growth_rate
+
             history.append(state.copy())
     return history 

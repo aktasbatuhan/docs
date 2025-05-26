@@ -521,7 +521,14 @@ def run_simulation_proposal(initial_state, p, num_years):
             state = handle_treasury_outflows(state, p)
             state = update_validator_contributor_churn(state, p)
             state = update_demand_drivers_proposal(state, p)
-            # ... rest of the loop ...
+            
+            # ADD MISSING PRICE UPDATE AND NODE GROWTH CALCULATIONS
+            state = update_simulated_price_proposal(state, p)
+            state = calculate_node_profitability_and_growth(state, p)
+            
+            # Add missing staking and slashing handling
+            state = handle_staking_and_slashing_proposal(state, p)
+            
             history.append(state.copy())
     return history
 
